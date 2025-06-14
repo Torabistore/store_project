@@ -4,11 +4,30 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
+<style>
+    /* استایل‌های کوچک مخصوص این صفحه برای هماهنگی با تم تیره */
+    .product-card { 
+        transition: all 0.2s ease-in-out; 
+        background-color: #343a40; /* رنگ پس‌زمینه کارت */
+        border-color: #495057;
+    }
+    .product-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+    }
+    .product-card .card-title {
+        color: #fff !important;
+    }
+    .product-card .text-muted {
+        color: #adb5bd !important;
+    }
+</style>
+
 <div class="container my-5">
     <div class="row g-5">
-        <div class="col-md-6">
-            <div id="productGallery" class="carousel slide carousel-fade shadow-sm rounded border" data-bs-ride="carousel">
-                <div class="carousel-inner bg-white rounded">
+        <div class="col-lg-6">
+            <div id="productGallery" class="carousel slide carousel-fade shadow-sm rounded border bg-white" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
                     <div class="carousel-item active">
                         <img src="{{ product.image.url }}" class="d-block w-100" style="height: 450px; object-fit: contain; padding: 1rem;" alt="{{ product.name }}">
                     </div>
@@ -30,18 +49,20 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-6">
             <h1 class="display-5 fw-bold">{{ product.name }}</h1>
             <p class="text-white-50 fs-5 mb-4">{{ product.brand }} - مدل: {{ product.sku }}</p>
-            <hr>
+            <hr class="border-secondary">
             <h4 class="mt-4">مشخصات محصول:</h4>
-            <p style="text-align: justify; line-height: 1.8;">{{ product.description|linebreaksbr }}</p>
+            <div style="text-align: justify; line-height: 1.8;">{{ product.description|linebreaksbr }}</div>
 
             <div class="mt-4">
                 {% if product.stock_status == 'AVAILABLE' %}
-                  <span class="badge fs-5 bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill">موجود در انبار</span>
+                  <span class="badge fs-5 bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill p-2">موجود در انبار</span>
+                {% elif product.stock_status == 'COMING_SOON' %}
+                  <span class="badge fs-5 bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill p-2">به زودی</span>
                 {% else %}
-                  <span class="badge fs-5 bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">ناموجود</span>
+                  <span class="badge fs-5 bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill p-2">ناموجود</span>
                 {% endif %}
             </div>
 
@@ -55,6 +76,7 @@
                     </a>
                 </div>
             </div>
+
             <a href="{% url 'product_list' %}" class="btn btn-outline-light">بازگشت به لیست محصولات</a>
         </div>
     </div>
