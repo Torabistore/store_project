@@ -1,0 +1,48 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}تماس با ما{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold">تماس با ما</h1>
+        <p class="lead text-muted">راه‌های ارتباطی با فروشگاه لوازم خانگی ترابی</p>
+        <hr>
+    </header>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <h3>اطلاعات تماس</h3>
+            <ul class="list-unstyled mt-4">
+                <li class="d-flex mb-3 align-items-center">
+                    <i class="bi bi-geo-alt-fill fs-4 me-3 text-dark"></i>
+                    <div>
+                        <strong>آدرس:</strong>
+                        <p class="mb-0">کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9</p>
+                    </div>
+                </li>
+                <li class="d-flex mb-3 align-items-center">
+                    <i class="bi bi-telephone-fill fs-4 me-3 text-dark"></i>
+                    <div>
+                        <strong>تلفن ثابت:</strong>
+                        <p class="mb-0" dir="ltr">034 - 32733888</p>
+                    </div>
+                </li>
+                <li class="d-flex mb-3 align-items-center">
+                    <i class="bi bi-phone-fill fs-4 me-3 text-dark"></i>
+                    <div>
+                        <strong>تلفن همراه (واتس‌اپ):</strong>
+                        <p class="mb-0" dir="ltr">0912 089 0108</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3 class="mb-4">موقعیت ما روی نقشه</h3>
+            <div class="ratio ratio-16x9 mt-4 rounded shadow">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1380.2624375155885!2d57.07318163642312!3d30.30200741180417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzDCsDE4JzA5LjkiTiA1N8KwMDQnMjguMCJF!5e0!3m2!1sen!2sus!4v1749893436499!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

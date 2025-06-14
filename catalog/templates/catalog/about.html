@@ -1,0 +1,36 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block title %}درباره ما{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold">درباره فروشگاه ترابی</h1>
+        <p class="lead text-muted">آشنایی بیشتر با ما و اهدافمان</p>
+        <hr>
+      </header>
+
+      <div class="text-center">
+          <img src="{% static 'images/logo.jpg' %}" class="img-fluid rounded-circle mb-4" alt="لوگوی فروشگاه ترابی" style="width: 150px; height: 150px; object-fit: cover;">
+      </div>
+
+      <h3 class="mt-5">داستان ما</h3>
+      <p style="text-align: justify; line-height: 1.8;">
+          فروشگاه لوازم خانگی ترابی فعالیت خود را از سال <strong>۱۳۷۲</strong> شمسی با هدف ارائه بهترین و باکیفیت‌ترین لوازم خانگی به صورت عمده آغاز کرد. با تکیه بر تجربه چندین دهه، ما همواره در حال رشد و خدمت‌رسانی به همکاران و فروشندگان گرامی در سراسر کشور بوده‌ایم و اعتماد شما، بزرگترین سرمایه ما در این مسیر طولانی بوده است.
+      </p>
+
+      <h3 class="mt-5">ماموریت ما</h3>
+      <p style="text-align: justify; line-height: 1.8;">
+          ماموریت ما در فروشگاه ترابی، ایجاد یک رابطه پایدار و مبتنی بر اعتماد با مشتریان عمده ماست. ما معتقدیم که موفقیت ما در گرو موفقیت شماست و به همین دلیل، تمام تلاش خود را برای ارائه خدمات بهتر، پشتیبانی کامل و تامین به موقع کالا به کار می‌گیریم. ما به دنبال آن هستیم که به عنوان یک شریک تجاری قابل اعتماد در کنار شما باشیم.
+      </p>
+      
+      <div class="text-center mt-5">
+          <a href="{% url 'product_list' %}" class="btn btn-secondary btn-lg">مشاهده کاتالوگ محصولات</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
