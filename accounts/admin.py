@@ -1,5 +1,6 @@
 # accounts/admin.py
 from django.contrib import admin
+from django.utils.html import mark_safe # این را برای نمایش پیش‌نمایش عکس وارد می‌کنیم
 from .models import Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):

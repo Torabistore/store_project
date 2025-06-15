@@ -3,11 +3,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(0k#6#%i=7@2%xwq8gr$z1tk!vjp(mn63abav69g#aeu293b)b'
 DEBUG = True
-ALLOWED_HOSTS =  ['torabistore.pythonanywhere.com']
+ALLOWED_HOSTS = ['torabistore.pythonanywhere.com'] # تغییر یافته
 
 INSTALLED_APPS = [
-    'accounts.apps.AccountsConfig', # کاما اضافه شد
     'catalog.apps.CatalogConfig',
+    'accounts.apps.AccountsConfig', # این خط اضافه شده و کاما تصحیح شده
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +52,7 @@ USE_TZ = True
 # --- بخش مهم فایل‌های استاتیک و مدیا ---
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles' # این خط اضافه شده است
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # -----------------------------------------

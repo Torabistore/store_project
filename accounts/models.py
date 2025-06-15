@@ -25,7 +25,7 @@ class OrderItem(models.Model):
 
     class Meta:
         verbose_name = "آیتم سفارش"
-        verbose_name_plural = "آیتم‌های سفارش"
+        verbose_plural = "آیتم‌های سفارش"
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name if self.product else 'محصول حذف شده'}"
