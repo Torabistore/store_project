@@ -3,7 +3,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(0k#6#%i=7@2%xwq8gr$z1tk!vjp(mn63abav69g#aeu293b)b'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =  ['torabistore.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'accounts.apps.AccountsConfig', # کاما اضافه شد
