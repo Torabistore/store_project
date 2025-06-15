@@ -58,3 +58,22 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # -----------------------------------------
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# store_config/settings.py
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+
+                # ⬅️ این خط را دقیقاً همین‌طور اضافه کن
+                'catalog.context_processors.categories',
+            ],
+        },
+    },
+]
