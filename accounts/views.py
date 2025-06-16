@@ -1,27 +1,31 @@
 # accounts/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm # فرم پیش‌فرض ثبت‌نام جنگو
-from django.contrib.auth.decorators import login_required # دکوراتور برای محافظت از صفحات
-from .models import Order # وارد کردن مدل Order
+from .forms import UserRegistrationForm # فرم ثبت‌نام سفارشی ما
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login # این خط اضافه شده
+from .models import Order
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login') # بعد از ثبت‌نام موفق به صفحه ورود هدایت می‌کند
+            user = form.save()
+            login(request, user) # کاربر را بلافاصله پس از ثبت‌نام وارد می‌کند
+            return redirect('profile') # به صفحه پروفایل هدایت می‌کند
+        else:
+            # اگر فرم نامعتبر بود، فرم را با خطاها دوباره نمایش بده
+            return render(request, 'accounts/register.html', {'form': form})
     else:
-        form = UserCreationForm()
+        form = UserRegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
-@login_required # این دکوراتور اطمینان می‌دهد که فقط کاربران لاگین کرده بتوانند این صفحه را ببینند
+@login_required
 def profile(request):
-    # در آینده می‌توانید اطلاعات بیشتری از پروفایل کاربر را اینجا نمایش دهید
     return render(request, 'accounts/profile.html')
 
 @login_required
 def order_list(request):
-    orders = request.user.orders.all() # تمام سفارشات مربوط به کاربر لاگین کرده را دریافت می‌کند
+    orders = request.user.orders.all()
     context = {
         'orders': orders
     }

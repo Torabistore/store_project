@@ -49,7 +49,7 @@
                                     <ul class="list-group list-group-flush bg-secondary">
                                         {% for item in order.items.all %}
                                         <li class="list-group-item bg-secondary text-white d-flex justify-content-between align-items-center">
-                                            {{ item.product.name if item.product else 'محصول حذف شده' }}
+                                            {{ item.product.name|default:"محصول حذف شده" }}
                                             <span class="badge bg-dark rounded-pill">{{ item.quantity }} عدد</span>
                                             <span class="badge bg-dark rounded-pill">{{ item.price|floatformat:"0" }} تومان/واحد</span>
                                         </li>

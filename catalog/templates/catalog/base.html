@@ -114,7 +114,15 @@
                     <li><a class="dropdown-item" href="{% url 'profile' %}">پروفایل</a></li>
                     <li><a class="dropdown-item" href="{% url 'order_list' %}">سفارشات من</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">خروج</a></li>
+                    {# این بخش اصلاح شده برای خروج از حساب کاربری #}
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item" style="width: 100%; text-align: right; border: none; background: none;">
+                                خروج
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </li>
             {% else %}
