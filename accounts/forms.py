@@ -1,14 +1,24 @@
-# accounts/forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
 
-class UserRegistrationForm(UserCreationForm):
-    # فیلدهای اضافی برای ثبت نام
-    first_name = forms.CharField(label=_('نام'), max_length=30, required=True)
-    last_name = forms.CharField(label=_('نام خانوادگی'), max_length=30, required=True)
+class CustomUserCreationForm(UserCreationForm):
+    full_name = forms.CharField(
+        max_length=100,
+        required=True,
+        label="نام کامل"
+    )
 
     class Meta:
-        model = User
-        fields = ('mobile_number', 'first_name', 'last_name') # فیلدهایی که در فرم ثبت نام ظاهر می‌شوند
+        model = CustomUser
+        fields = ('phone_number', 'full_name', 'password1', 'password2')
+        labels = {
+            'phone_number': 'شماره همراه',
+        }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.full_name = self.cleaned_data['full_name']
+        if commit:
+            user.save()
+        return user
