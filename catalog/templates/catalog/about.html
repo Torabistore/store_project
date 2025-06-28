@@ -1,4 +1,4 @@
-{% extends 'catalog/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}درباره ما{% endblock %}
@@ -28,7 +28,7 @@
       </p>
       
       <div class="text-center mt-5">
-          <a href="{% url 'product_list' %}" class="btn btn-secondary btn-lg">مشاهده کاتالوگ محصولات</a>
+          <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary btn-lg">مشاهده کاتالوگ محصولات</a>
       </div>
     </div>
   </div>

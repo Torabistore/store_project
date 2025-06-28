@@ -67,3 +67,10 @@ def contact_page(request):
     categories = Product.objects.values_list('category', flat=True).distinct().order_by('category')
     context = {'categories': categories}
     return render(request, 'catalog/contact.html', context)
+# این دو تابع را به انتهای catalog/views.py اضافه کنید
+
+def about_page(request):
+    return render(request, 'catalog/about.html')
+
+def contact_page(request):
+    return render(request, 'catalog/contact.html')
