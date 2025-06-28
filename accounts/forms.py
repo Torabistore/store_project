@@ -1,24 +1,19 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+# accounts/forms.py
 
-class CustomUserCreationForm(UserCreationForm):
-    full_name = forms.CharField(
-        max_length=100,
-        required=True,
-        label="نام کامل"
+from django import forms
+
+# فرم مرحله اول: گرفتن شماره همراه
+class PasswordResetRequestForm(forms.Form):
+    mobile_number = forms.CharField(
+        label="شماره همراه", 
+        max_length=11,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '09...'})
     )
 
-    class Meta:
-        model = CustomUser
-        fields = ('phone_number', 'full_name', 'password1', 'password2')
-        labels = {
-            'phone_number': 'شماره همراه',
-        }
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.full_name = self.cleaned_data['full_name']
-        if commit:
-            user.save()
-        return user
+# فرم مرحله دوم: گرفتن کد تایید
+class VerifyOTPForm(forms.Form):
+    otp_code = forms.CharField(
+        label="کد تایید ۶ رقمی", 
+        max_length=6,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'کد ارسال شده را وارد کنید'})
+    )
