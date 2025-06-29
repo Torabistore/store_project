@@ -1,4 +1,6 @@
-{% extends 'catalog/base.html' %}
+{% extends 'base.html' %}
+{% load widget_tweaks %} {# <--- ADDED / VERIFIED #}
+
 {% block title %}ورود{% endblock %}
 
 {% block content %}
@@ -6,28 +8,50 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card bg-dark text-white shadow-lg">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">ورود</h2>
-                    <form method="post">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">ورود به حساب کاربری</h2>
+                    <form method="post" novalidate>
                         {% csrf_token %}
-                        {% if form.errors %}
+                        {% if form.non_field_errors %}
                             <div class="alert alert-danger" role="alert">
-                                نام کاربری یا رمز عبور نامعتبر است.
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% elif form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                شماره همراه یا رمز عبور نامعتبر است.
                             </div>
                         {% endif %}
-                        <div class="mb-3">
-                            <label for="{{ form.username.id_for_label }}" class="form-label">نام کاربری:</label>
-                            {{ form.username }}
-                        </div>
-                        <div class="mb-3">
-                            <label for="{{ form.password.id_for_label }}" class="form-label">رمز عبور:</label>
-                            {{ form.password }}
-                        </div>
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+                                {{ field|attr:"class:form-control"|attr:"required:required" }} {# <--- VERIFIED #}
+                                
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in field.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
                         <button type="submit" class="btn btn-primary w-100 mt-4">ورود</button>
                     </form>
-                    <p class="text-center mt-3">
-                        ثبت نام نکرده‌اید؟ <a href="{% url 'register' %}" class="text-info">ثبت نام کنید</a>
-                    </p>
+                    <div class="text-center mt-3">
+                        <p class="mb-1">
+                            <a href="{% url 'accounts:password_reset_request' %}" class="text-info">رمز عبور خود را فراموش کرده‌اید؟</a>
+                        </p>
+                        <p class="mb-0">
+                            ثبت نام نکرده‌اید؟ <a href="{% url 'accounts:register' %}" class="text-info">ثبت نام کنید</a> {# <--- VERIFIED #}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

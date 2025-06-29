@@ -1,36 +1,23 @@
+# catalog/admin.py
+
 from django.contrib import admin
-from django.utils.html import mark_safe # این را برای نمایش پیش‌نمایش عکس وارد می‌کنیم
-from .models import Product, ProductImage # مدل ProductImage را هم وارد می‌کنیم
+from .models import Category, Product, ProductImage # <--- ProductImage هم import شد
 
-# این کلاس جدید برای نمایش فرم آپلود عکس‌ها در صفحه محصول است
-class ProductImageInline(admin.TabularInline):
+# Inline برای ProductImage (برای نمایش تصاویر در صفحه ویرایش محصول)
+class ProductImageInline(admin.TabularInline): # یا admin.StackedInline
     model = ProductImage
-    extra = 1  # به صورت پیش‌فرض، یک فیلد خالی برای آپلود عکس جدید نشان می‌دهد
-    readonly_fields = ('image_preview',) # یک فیلد فقط خواندنی برای پیش‌نمایش عکس
+    extra = 1 # تعداد فیلدهای خالی برای اضافه کردن تصاویر جدید
+    fields = ('image', 'is_main',) # فیلدهایی که در ادمین نمایش داده میشن
 
-    # این تابع یک تگ img برای نمایش عکس در پنل ادمین می‌سازد
-    def image_preview(self, obj):
-        if obj.image:
-            return mark_safe(f'<img src="{obj.image.url}" width="150" />')
-        return ""
-    image_preview.short_description = 'پیش‌نمایش عکس'
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug': ('name',)} # slug را بر اساس name پر می کند
 
-
-# این کلاس ProductAdmin قبلی ماست که آن را ویرایش می‌کنیم
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'brand', 'category', 'stock_status')
-    list_filter = ('category', 'brand', 'stock_status')
-    search_fields = ('name', 'sku', 'brand')
-    fieldsets = (
-        (None, {'fields': ('name', 'sku', 'image')}), # 'image' عکس اصلی محصول است
-        ('مشخصات', {'fields': ('brand', 'category', 'description')}),
-        ('انبارداری', {'fields': ('stock_status',)}),
-    )
-
-    # این خط جدید، بخش مدیریت گالری تصاویر را به صفحه ویرایش محصول اضافه می‌کند
-    inlines = [ProductImageInline]
-
-
-# ما دیگر به این خط نیاز نداریم چون از دکوراتور @admin.register استفاده کردیم
-# admin.site.register(ProductImage)
+    list_display = ['name', 'slug', 'price', 'available', 'created_at', 'updated_at']
+    list_filter = ['available', 'created_at', 'updated_at', 'category']
+    list_editable = ['price', 'available'] # این فیلدها را می توان مستقیم از لیست ویرایش کرد
+    prepopulated_fields = {'slug': ('name',)}
+    inlines = [ProductImageInline] # <--- ProductImageInline به ProductAdmin اضافه شد

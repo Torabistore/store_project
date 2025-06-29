@@ -6,10 +6,14 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth import login
 from django.contrib import messages
 from kavenegar import KavenegarAPI, APIException, HTTPException
+from django.contrib.auth import logout as auth_logout # <--- این خط اضافه شد
 
-from .forms import PasswordResetRequestForm, VerifyOTPForm
+# تمام فرم‌های مورد نیاز را یکجا وارد می‌کنیم
+from .forms import PasswordResetRequestForm, VerifyOTPForm, CustomUserCreationForm
 from .models import User
 import random
+
+# =========== ویوهای مربوط به بازیابی رمز عبور ===========
 
 def password_reset_request(request):
     if request.method == 'POST':
@@ -22,7 +26,7 @@ def password_reset_request(request):
                 request.session['otp_code'] = otp_code
                 request.session['otp_mobile'] = mobile_number
                 
-                # ---- بخش ارسال پیامک واقعی با کاوه‌نگار ----
+                # ارسال پیامک واقعی با کاوه‌نگار
                 try:
                     api = KavenegarAPI(settings.SMS_API_KEY)
                     params = {
@@ -31,16 +35,10 @@ def password_reset_request(request):
                         'message': f'کد بازیابی رمز شما: {otp_code}'
                     }
                     response = api.sms_send(params)
-                    print(f"Kavenegar Response: {response}") # برای خطایابی در کنسول
-                except APIException as e: 
-                    print(f"Kavenegar API Exception: {e}")
+                except Exception as e: 
+                    print(f"Kavenegar Error: {e}")
                     messages.error(request, 'خطا در ارسال پیامک. لطفاً با پشتیبانی تماس بگیرید.')
                     return render(request, 'accounts/password_reset_form.html', {'form': form})
-                except HTTPException as e:
-                    print(f"Kavenegar HTTP Exception: {e}")
-                    messages.error(request, 'خطا در اتصال به سرویس پیامک. لطفاً با پشتیبانی تماس بگیرید.')
-                    return render(request, 'accounts/password_reset_form.html', {'form': form})
-                # -------------------------------------------
 
                 return redirect('accounts:verify_otp')
 
@@ -84,11 +82,37 @@ def set_new_password(request):
         form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
+            # پاک کردن اطلاعات یکبار مصرف از حافظه
             if 'otp_code' in request.session: del request.session['otp_code']
             if 'otp_mobile' in request.session: del request.session['otp_mobile']
             if 'otp_verified' in request.session: del request.session['otp_verified']
+            
             login(request, user)
+            messages.success(request, 'رمز عبور شما با موفقیت تغییر یافت و وارد شدید.')
             return redirect('/')
     else:
         form = SetPasswordForm(user)
     return render(request, 'accounts/set_new_password.html', {'form': form})
+
+
+# =========== ویو مربوط به ثبت نام ===========
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'ثبت نام شما با موفقیت انجام شد! حالا می‌توانید وارد شوید.')
+            login(request, user) # ورود خودکار کاربر بعد از ثبت نام
+            return redirect('/') # هدایت به صفحه اصلی
+        # اگر فرم نامعتبر بود، فرم با خطاها دوباره رندر می شود
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'accounts/register.html', {'form': form})
+
+# =========== ویو جدید مربوط به خروج ===========
+
+def logout_view(request): # <--- این تابع اضافه شد
+    auth_logout(request) 
+    messages.info(request, "با موفقیت از حساب کاربری خود خارج شدید.") 
+    return redirect('accounts:login') # هدایت به صفحه ورود
