@@ -17,24 +17,29 @@ class VerifyOTPForm(forms.Form):
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User 
-        # Define the order of fields explicitly
-        # UserCreationForm automatically adds 'password' and 'password2'
-        fields = ('mobile_number', 'first_name', 'last_name',) # This line is correct.
-                                                              # 'password' and 'password2' are implicitly added.
+        fields = ('mobile_number', 'first_name', 'last_name',) 
+
         labels = {
             'mobile_number': 'شماره همراه',
             'first_name': 'نام',
             'last_name': 'نام خانوادگی',
-            # 'password' and 'password2' get labels from UserCreationForm by default
         }
         help_texts = {
             'mobile_number': 'شماره همراه ۱۰ رقمی خود را وارد کنید (مثال: 09123456789).',
         }
 
-# If you use a custom authentication form for login based on mobile number
+# Custom Authentication Form for login based on mobile number
 class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(label='شماره همراه') 
-    password = forms.CharField(label='رمز عبور', widget=forms.PasswordInput)
+    # Passwords should use PasswordInput widget for security.
+    # The labels are handled by the template using field.label
+    username = forms.CharField(
+        label='شماره همراه', 
+        widget=forms.TextInput(attrs={'placeholder': 'شماره همراه خود را وارد کنید'}) # <--- اضافه شد
+    )
+    password = forms.CharField(
+        label='گذرواژه', 
+        widget=forms.PasswordInput(attrs={'placeholder': 'گذرواژه خود را وارد کنید'}) # <--- اضافه شد
+    )
 
     class Meta:
         fields = ['username', 'password']
