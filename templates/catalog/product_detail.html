@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %} {# برای استفاده از فیلتر split_by_newline #}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+{# استایل‌های اینلاین را بهتر است به style.css منتقل کنید. فعلا برای تست اینجا می‌مانند. #}
+<style>
+    /* این استایل‌ها فقط برای این صفحه هستند و بهتر است در style.css قرار گیرند */
+    .product-card { 
+        transition: all 0.2s ease-in-out; 
+        background-color: #343a40; 
+        border-color: #495057;
+    }
+    .product-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15); 
+    }
+    .product-card .card-title {
+        color: #fff !important;
+    }
+    .product-card .text-muted {
+        color: #adb5bd !important;
+    }
+    /* Style for the price and availability box */
+    .price-availability-box {
+        background-color: #f8f9fa; /* پس‌زمینه روشن برای کادر */
+        border: 1px solid #dee2e6; /* بوردر روشن */
+        border-radius: 8px; /* گوشه‌های گرد */
+        padding: 15px; /* پدینگ داخلی */
+        display: flex; /* استفاده از فلکس‌باکس */
+        flex-direction: column; /* چینش عمودی */
+        align-items: center; /* وسط‌چین افقی */
+        margin-top: 20px; /* فاصله از بالا */
+        margin-bottom: 20px; /* فاصله از پایین */
+        max-width: 250px; /* عرض کادر */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* سایه */
+        margin-left: auto; /* برای وسط‌چین افقی */
+        margin-right: auto; /* برای وسط‌چین افقی */
+    }
+    .price-availability-box .price {
+        font-size: 2.5rem; /* سایز بزرگتر برای قیمت */
+        color: #007bff; /* رنگ اصلی */
+        margin-bottom: 10px; /* فاصله بین قیمت و وضعیت */
+    }
+    .price-availability-box .availability {
+        font-size: 1.1rem;
+        padding: .5em .8em; /* Adjust padding for badge */
+    }
+
+    /* این استایل‌ها برای متن‌های روی پس‌زمینه روشن هستند، بهتر است در style.css باشند */
+    .container.my-5 h1, 
+    .container.my-5 h2, 
+    .container.my-5 h3, 
+    .container.my-5 h4, 
+    .container.my-5 h5, 
+    .container.my-5 h6,
+    .container.my-5 p,
+    .container.my-5 ul li {
+        color: #212529; /* رنگ تیره برای متن‌های روی پس‌زمینه روشن */
+    }
+    .container.my-5 .text-muted {
+        color: #495057 !important; /* رنگ خاکستری تیره برای text-muted */
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row g-5">
+        <div class="col-lg-6"> {# ستون سمت راست برای گالری تصاویر محصول #}
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    {# نمایش تصویر اصلی از product.images.first #}
+                    {% with main_image=product.images.first %}
+                    {% if main_image and main_image.image %}
+                    <div class="carousel-item active">
+                        <img src="{{ main_image.image.url }}" class="d-block w-100 img-fluid" alt="{{ product.name }}" style="max-height: 400px; object-fit: contain;">
+                    </div>
+                    {% else %}
+                    <div class="carousel-item active">
+                        <img src="{% static 'images/placeholder.png' %}" class="d-block w-100 img-fluid" alt="تصویر موجود نیست" style="max-height: 400px; object-fit: contain;">
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    {% for img in product.images.all %}
+                        {% comment %} Don't duplicate the first image if it's already active {% endcomment %}
+                        {% if not forloop.first or not product.images.first %} 
+                        <div class="carousel-item">
+                            <img src="{{ img.image.url }}" class="d-block w-100 img-fluid" alt="{{ product.name }}" style="max-height: 400px; object-fit: contain;">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if product.images.all.count > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">قبلی</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">بعدی</span>
+                </button>
+                {% endif %}
+            </div>
+        </div> {# <--- پایان col-lg-6 برای گالری تصاویر #}
+
+        <div class="col-lg-6"> {# ستون سمت چپ برای مشخصات محصول #}
+            <h1 class="display-5 fw-bold">{{ product.name }}</h1>
+            <hr class="border-secondary">
+            
+            {% if product.description %}
+                <div style="text-align: justify; line-height: 1.8;" class="mb-4">{{ product.description|linebreaksbr }}</div> {# <--- توضیحات محصول #}
+            {% endif %}
+
+            {# مشخصات محصول از فیلد specifications در ادمین #}
+            {% if product.specifications %}
+                <h4 class="mt-4">مشخصات محصول:</h4> 
+                <ul class="list-unstyled">
+                    {% for spec_line in product.specifications|split_by_newline %}
+                        <li>{{ spec_line }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            {# MOVED: Price and Availability Box below specifications #}
+            {# این کادر اینجا قرار می‌گیرد تا زیر مشخصات محصول باشد #}
+            <div class="card price-availability-box mx-auto"> {# <--- mx-auto اضافه شد برای مرکزیت #}
+                <span class="price fw-bold">{{ product.price|floatformat:"0" }} تومان</span>
+                {% if product.available %}
+                    <span class="badge bg-success availability rounded-pill">موجود در انبار</span>
+                {% else %}
+                    <span class="badge bg-danger availability rounded-pill">ناموجود</span>
+                {% endif %}
+            </div>
+
+            <div class="card bg-dark border-secondary text-center my-5 shadow">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">همکار گرامی</h5>
+                    <p class="card-text text-white-50">برای استعلام قیمت عمده و ثبت سفارش، لطفاً با ما تماس بگیرید.</p>
+                    <a href="tel:09120890108" class="btn btn-light btn-lg">
+                        <i class="bi bi-telephone-outbound-fill me-2"></i>
+                         تماس بگیرید
+                    </a>
+                </div>
+            </div>
+
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-light">بازگشت به لیست محصولات</a>
+        </div> {# <--- پایان col-lg-6 برای مشخصات محصول #}
+    </div> {# <--- پایان row g-5 #}
+</div> {# <--- پایان container my-5 #}
+
+{# Related Products Section #}
+{% if related_products %}
+<div class="py-5 border-top">
+    <div class="container">
+        <h2 class="pb-2 text-center fw-bold">محصولات مشابه</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 py-3">
+            {% for p in related_products %}
+            <div class="col">
+                <a href="{% url 'catalog:product_detail' pk=p.pk %}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm">
+                        {% with related_main_image=p.images.first %}
+                            {% if related_main_image and related_main_image.image %}
+                            <img src="{{ related_main_image.image.url }}" class="card-img-top" alt="{{ p.name }}" style="height: 200px; object-fit: contain;">
+                            {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" class="card-img-top" alt="تصویر موجود نیست" style="height: 200px; object-fit: contain;">
+                            {% endif %}
+                        {% endwith %}
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">{{ p.name }}</h5>
+                            {# Optional: display price for related products #}
+                            {# <span class="text-primary fw-bold">{{ p.price|floatformat:"0" }} تومان</span> #}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
