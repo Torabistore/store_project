@@ -6,13 +6,12 @@
 body {
     font-family: 'Vazirmatn', sans-serif; /* Apply Vazirmatn to entire body */
     background-color: #f8f9fa; /* Light background for the whole page */
-    color: #212529; /* Default dark text color for all content */
+    color: #343a40; /* Darker text for better readability */
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Vazirmatn', sans-serif;
     font-weight: 700; /* Make headings bolder */
-    color: #212529; /* Ensure headings are dark by default */
 }
 
 .navbar {
@@ -94,11 +93,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Styles for form error messages on dark backgrounds (e.g., login/register cards) */
 .card.bg-dark .text-danger,
 .card.bg-dark .form-text { 
-    color: white !important; /* White color for dark background cards */
+    color: white !important;
 }
 
-.alert-danger { /* For non-field errors at the top of the form */
-    color: white !important; /* White text for alert background */
+.alert-danger {
+    color: white !important;
     background-color: #dc3545 !important;
     border-color: #dc3545 !important;
 }
@@ -109,7 +108,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
 }
 
-/* Price and Availability Box Styles */
+/* Price and Availability Box Styles (as it was before last changes) */
 .price-availability-box {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
@@ -135,22 +134,40 @@ h1, h2, h3, h4, h5, h6 {
     padding: .5em .8em;
 }
 
-/* --- Wholesaler Card Style (Corrected for visibility) --- */
-/* Target the specific card for "همکار گرامی" on product detail page */
+/* General text colors for light background pages (Reset to dark) */
+body, 
+.container.my-5 p,
+.container.my-5 ul li,
+.container.my-5 .form-label,
+.container.my-5 strong {
+    color: #212529 !important; /* Default dark text for all general content */
+}
+.container.my-5 .text-muted {
+    color: #495057 !important;
+}
+.container.my-5 a {
+    color: #007bff !important;
+}
+.container.my-5 a.text-info {
+    color: #00bfff !important;
+}
+
+/* Wholesaler Card Style (Original style, we will fix it in the next step after verifying these basic colors) */
+/* This is back to the initial dark style that might be unreadable */
 .card.wholesaler-card {
-    background-color: #dc3545 !important; /* یک رنگ قرمز روشن برای پس‌زمینه */
-    color: white !important; /* رنگ سفید برای متن */
-    border-color: #bb2d3b !important; /* رنگ بوردر قرمز تیره */
+    background-color: #343a40 !important; /* Original dark background */
+    color: white !important; /* Original white text */
+    border-color: #495057 !important;
 }
 .card.wholesaler-card .card-title,
 .card.wholesaler-card .card-text {
-    color: white !important; /* اطمینان از سفید بودن متن داخل کارت */
+    color: white !important;
 }
 .card.wholesaler-card .btn-light {
-    background-color: white !important; /* رنگ پس‌زمینه دکمه سفید */
-    color: #dc3545 !important; /* رنگ متن دکمه قرمز */
+    background-color: white !important;
+    color: #343a40 !important;
 }
 .card.wholesaler-card .btn-light:hover {
     background-color: #f8f9fa !important;
-    color: #bb2d3b !important;
+    color: #495057 !important;
 }

@@ -22,6 +22,7 @@
     .product-card .text-muted {
         color: #adb5bd !important;
     }
+    /* Style for the price and availability box */
     .price-availability-box {
         background-color: #f8f9fa;
         border: 1px solid #dee2e6;
@@ -46,6 +47,7 @@
         font-size: 1.1rem;
         padding: .5em .8em;
     }
+    /* این استایل‌ها برای متن‌های روی پس‌زمینه روشن هستند، بهتر است در style.css باشند */
     .container.my-5 h1, 
     .container.my-5 h2, 
     .container.my-5 h3, 
@@ -59,22 +61,23 @@
     .container.my-5 .text-muted {
         color: #495057 !important;
     }
-    .card.wholesaler-card { /* <--- این کلاس به #f8d7da تغییر رنگ داد */
-        background-color: #f8d7da !important; /* رنگ قرمز روشن */
-        color: #721c24 !important; /* متن قرمز تیره */
-        border-color: #f5c6cb !important;
+    /* Wholesaler Card Style (Original style, we will fix it later in style.css) */
+    .wholesaler-card {
+        background-color: #f8d7da; /* Placeholder: should be replaced by your desired color */
+        color: #721c24; /* Placeholder: should be replaced by your desired color */
+        border-color: #f5c6cb; /* Placeholder: should be replaced by your desired color */
     }
-    .card.wholesaler-card .card-title,
-    .card.wholesaler-card .card-text {
-        color: #721c24 !important; /* اطمینان از رنگ متن */
+    .wholesaler-card .card-title,
+    .wholesaler-card .card-text {
+        color: #721c24; /* Placeholder */
     }
-    .card.wholesaler-card .btn-light {
-        background-color: #721c24 !important; /* دکمه قرمز تیره */
-        color: white !important; /* متن سفید */
+    .wholesaler-card .btn-light {
+        background-color: #721c24; /* Placeholder */
+        color: white; /* Placeholder */
     }
-    .card.wholesaler-card .btn-light:hover {
-        background-color: #dc3545 !important; /* هاور کمی روشن‌تر */
-        color: white !important;
+    .wholesaler-card .btn-light:hover {
+        background-color: #dc3545; /* Placeholder */
+        color: white; /* Placeholder */
     }
 </style>
 
@@ -176,6 +179,7 @@
                         {% endwith %}
                         <div class="card-body">
                             <h5 class="card-title fw-bold">{{ p.name }}</h5>
+                            <span class="text-primary fw-bold">{{ p.price|floatformat:"0" }} تومان</span>
                         </div>
                     </div>
                 </a>
