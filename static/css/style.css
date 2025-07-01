@@ -6,13 +6,13 @@
 body {
     font-family: 'Vazirmatn', sans-serif; /* Apply Vazirmatn to entire body */
     background-color: #f8f9fa; /* Light background for the whole page */
-    color: #212529; /* Darker text for better readability on light background */
+    color: #212529; /* Default dark text color for all content */
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Vazirmatn', sans-serif;
     font-weight: 700; /* Make headings bolder */
-    color: #212529; /* Ensure headings are dark */
+    color: #212529; /* Ensure headings are dark by default */
 }
 
 .navbar {
@@ -88,10 +88,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom spacing for form fields in cards */
 .card-body .mb-3 {
-    margin-bottom: 10px !important; /* Adjust this value (e.g., 5px, 10px, 15px) */
+    margin-bottom: 10px !important;
 }
 
-/* Styles for form error messages on dark backgrounds */
+/* Styles for form error messages on dark backgrounds (e.g., login/register cards) */
 .card.bg-dark .text-danger,
 .card.bg-dark .form-text { 
     color: white !important; /* White color for dark background cards */
@@ -99,75 +99,58 @@ h1, h2, h3, h4, h5, h6 {
 
 .alert-danger { /* For non-field errors at the top of the form */
     color: white !important; /* White text for alert background */
-    background-color: #dc3545 !important; /* Default Bootstrap red for alert background */
+    background-color: #dc3545 !important;
     border-color: #dc3545 !important;
 }
 
 /* Styles for form placeholders on dark backgrounds */
 .card.bg-dark .form-control::placeholder { 
-    color: rgba(255, 255, 255, 0.7) !important; /* Lighter white for placeholder on dark background */
-    opacity: 1; /* Ensures full opacity for placeholder */
+    color: rgba(255, 255, 255, 0.7) !important; 
+    opacity: 1;
 }
 
 /* Price and Availability Box Styles */
 .price-availability-box {
-    background-color: #f8f9fa; /* Light background for the box */
-    border: 1px solid #dee2e6; /* Light border */
-    border-radius: 8px; /* Rounded corners */
-    padding: 15px; /* Padding inside the box */
-    display: flex; /* Use flexbox for alignment */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center items horizontally */
-    margin-top: 20px; /* Space from element above */
-    margin-bottom: 20px; /* Space from element below */
-    max-width: 250px; /* Width of the box */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
-    margin-left: auto; /* For horizontal centering */
-    margin-right: auto; /* For horizontal centering */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 250px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-left: auto;
+    margin-right: auto;
 }
 .price-availability-box .price {
-    font-size: 2.5rem; /* Larger price font size */
-    color: #007bff; /* Primary color */
-    margin-bottom: 10px; /* Space between price and availability */
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
 }
 .price-availability-box .availability {
     font-size: 1.1rem;
-    padding: .5em .8em; /* Adjust padding for badge */
+    padding: .5em .8em;
 }
 
-/* Styles for the wholesaler info card on product detail page */
-.wholesaler-card {
-    background-color: #dc3545 !important; /* Red background for wholesaler card */
-    color: white !important; /* White text */
-    border-color: #bb2d3b !important;
+/* --- Wholesaler Card Style (Corrected for visibility) --- */
+/* Target the specific card for "همکار گرامی" on product detail page */
+.card.wholesaler-card {
+    background-color: #dc3545 !important; /* یک رنگ قرمز روشن برای پس‌زمینه */
+    color: white !important; /* رنگ سفید برای متن */
+    border-color: #bb2d3b !important; /* رنگ بوردر قرمز تیره */
 }
-.wholesaler-card .card-title, .wholesaler-card .card-text {
-    color: white !important; /* Ensure all text is white */
+.card.wholesaler-card .card-title,
+.card.wholesaler-card .card-text {
+    color: white !important; /* اطمینان از سفید بودن متن داخل کارت */
 }
-.wholesaler-card .btn-light {
-    background-color: white !important;
-    color: #dc3545 !important; /* Red text on white button */
+.card.wholesaler-card .btn-light {
+    background-color: white !important; /* رنگ پس‌زمینه دکمه سفید */
+    color: #dc3545 !important; /* رنگ متن دکمه قرمز */
 }
-.wholesaler-card .btn-light:hover {
+.card.wholesaler-card .btn-light:hover {
     background-color: #f8f9fa !important;
     color: #bb2d3b !important;
-}
-
-/* --- General text colors for light background pages (e.g., About Us, Contact Us) --- */
-/* Target all text elements within the main content container on light pages */
-.container.py-5 p,
-.container.py-5 ul li,
-.container.py-5 .form-label,
-.container.py-5 strong {
-    color: #212529 !important; /* Dark text for all general content */
-}
-.container.py-5 .text-muted {
-    color: #495057 !important; /* Ensure muted text is dark gray */
-}
-/* Ensure links in general content are not overridden by dark text unless specified */
-.container.py-5 a {
-    color: #007bff !important; /* Default link color (blue) */
-}
-.container.py-5 a.text-info { /* Specific for info links like in login/register */
-    color: #00bfff !important;
 }
