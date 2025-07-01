@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card-title {
-    color: #34495e; /* Custom color for product titles */
+    color: #343a5e; /* Custom color for product titles */
 }
 
 .text-primary {
@@ -101,14 +101,53 @@ h1, h2, h3, h4, h5, h6 {
     border-color: #dc3545 !important;
 }
 
-/* ADDED: Styles for form placeholders and help text (like password hints) */
-/* This targets placeholder text color */
+/* Styles for form placeholders and help text (like password hints) */
 .form-control::placeholder { 
     color: white !important; /* Make placeholder text white */
     opacity: 1; /* Ensures full opacity for placeholder */
 }
 
-/* This targets help text (e.g., password validation rules) */
 .form-text.text-muted { 
     color: white !important; /* Make help text white */
+}
+
+/* --- Price and Availability Box Styles --- */
+.price-availability-box {
+    background-color: #f8f9fa; /* Light background for the box */
+    border: 1px solid #dee2e6; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Padding inside the box */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    /* Remove fixed margin-top and margin-bottom from here if they are in HTML */
+    margin-top: 20px; /* Space from element above */
+    margin-bottom: 20px; /* Space from element below */
+    max-width: 250px; /* <--- کوچکتر کردن عرض کادر (تغییر از 300px به 250px) */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* سایه ملایم */
+    margin-left: auto; /* برای وسط قرار گرفتن افقی */
+    margin-right: auto; /* برای وسط قرار گرفتن افقی */
+}
+.price-availability-box .price {
+    font-size: 2rem; /* <--- کوچکتر کردن سایز قیمت (تغییر از 2.5rem به 2rem) */
+    color: #007bff; /* Primary color */
+    margin-bottom: 8px; /* فاصله کمتر بین قیمت و موجودی */
+}
+.price-availability-box .availability {
+    font-size: 1rem; /* <--- کوچکتر کردن سایز متن موجودی (تغییر از 1.1rem به 1rem) */
+    padding: .4em .7em; /* Adjust padding for badge */
+}
+
+/* --- Styles for pages with light backgrounds (e.g., About Us, Contact Us) --- */
+.container.py-5 {
+    color: #212529; /* Darker text color for general content on light background */
+}
+.container.py-5 h1, .container.py-5 h2, .container.py-5 h3, .container.py-5 h4, .container.py-5 h5, .container.py-5 h6 {
+    color: #212529; /* Ensure headings are dark */
+}
+.container.py-5 p {
+    color: #495057; /* Slightly lighter dark for paragraphs */
+}
+.container.py-5 .text-muted {
+    color: #6c757d !important; /* Ensure muted text is readable */
 }
