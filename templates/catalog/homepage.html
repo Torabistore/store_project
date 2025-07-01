@@ -4,90 +4,46 @@
 {% block title %}صفحه اصلی{% endblock %}
 
 {% block content %}
-<style>
-    /* استایل‌های شما در اینجا قرار دارند و دست نخورده باقی می‌مانند */
-    .hero-section {
-        background: url('https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=2768&auto=format&fit=crop') no-repeat center center;
-        background-size: cover;
-        position: relative;
-        color: white;
-        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-    }
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5); 
-    }
-    .hero-content {
-        position: relative;
-        z-index: 1;
-    }
-    /* ... سایر استایل‌های شما ... */
-</style>
-
-<div class="hero-section">
-    <div class="container col-xxl-8 px-4 py-5">
-        <div class="row align-items-center g-5 py-5">
-            <div class="col-lg-12 text-center hero-content">
-                <h1 class="display-4 fw-bold lh-1 mb-3">کیفیت و اطمینان در خانه شما</h1>
-                <p class="fs-4 lead mb-4">ارائه برترین برندهای لوازم خانگی به صورت عمده از سال ۱۳۷۲</p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                    <a href="{% url 'catalog:product_list' %}" class="btn btn-light btn-lg px-4 me-md-2">مشاهده همه محصولات</a>
-                    <a href="{% url 'catalog:contact_page' %}" class="btn btn-outline-light btn-lg px-4">تماس با ما</a>
-                </div>
-            </div>
+<div class="container my-5">
+    <div class="text-center py-5" style="background-image: url('{% static 'images/hero_background.jpg' %}'); background-size: cover; background-position: center; color: white; padding: 100px 0; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <h1 class="display-4 fw-bold mb-3" style="color: white !important;">کیفیت و اطمینان در خانه شما</h1>
+        <p class="lead" style="color: white !important;">ارائه برترین برندهای لوازم خانگی به صورت عمده از سال ۱۳۷۲</p> {# <--- اینجا استایل اینلاین اضافه شد #}
+        <div class="mt-4">
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-light btn-lg mx-2">مشاهده همه محصولات</a>
+            <a href="{% url 'catalog:contact_page' %}" class="btn btn-outline-light btn-lg mx-2">تماس با ما</a>
         </div>
     </div>
-</div>
 
-{% if featured_categories %}
-<div class="container px-4 py-5">
-    <h2 class="pb-2 border-bottom text-center fw-bold">دسته‌بندی محصولات</h2>
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4 py-5">
-        {% for cat in featured_categories %}
-        <div class="col">
-            <a href="{% url 'catalog:category_list' category_name=cat.name %}" class="text-decoration-none">
-                <div class="card card-cover h-100 rounded-4 shadow-lg category-card">
-                    <img src="{{ cat.image_url }}" class="card-img" alt="{{ cat.name }}">
-                    <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
-                        <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold text-white">{{ cat.name }}</h3>
-                    </div>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
-
-{% if newest_products %}
-<div class="bg-dark">
-    <div class="container px-4 py-5 text-white">
-        <h2 class="pb-2 border-bottom text-center fw-bold">جدیدترین محصولات</h2>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 py-5">
-            {% for product in newest_products %}
+    {# بخش‌های دیگر صفحه اصلی (مثلاً محصولات جدید، پرفروش و غیره) #}
+    {# اگر این بخش‌ها را در homepage.html خود دارید، باید آن‌ها را اینجا اضافه کنید #}
+    {# مثال: #}
+    {% if recent_products %}
+    <div class="py-5">
+        <h2 class="pb-2 text-center fw-bold">جدیدترین محصولات</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 py-3">
+            {% for product in recent_products %}
             <div class="col">
                 <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="text-decoration-none">
-                    <div class="card h-100 product-card">
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: contain; padding: 1rem; background-color: #fff;">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title fw-bold text-dark">{{ product.name }}</h5>
-                            <p class="card-text text-muted small">{{ product.brand }} - مدل: {{ product.sku }}</p>
-                            </div>
+                    <div class="card h-100 shadow-sm">
+                        {% with main_image=product.images.first %}
+                            {% if main_image and main_image.image %}
+                            <img src="{{ main_image.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: contain;">
+                            {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" class="card-img-top" alt="تصویر موجود نیست" style="height: 200px; object-fit: contain;">
+                            {% endif %}
+                        {% endwith %}
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                            {# Optional: display price #}
+                            <span class="text-primary fw-bold">{{ product.price|floatformat:"0" }} تومان</span>
+                        </div>
                     </div>
                 </a>
             </div>
             {% endfor %}
         </div>
-        <div class="text-center">
-             <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-light">مشاهده همه محصولات</a>
-        </div>
     </div>
-</div>
-{% endif %}
+    {% endif %}
 
+</div>
 {% endblock %}
