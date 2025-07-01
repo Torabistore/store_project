@@ -1,52 +1,53 @@
-/* D:\store_project\static\css\style.css */
+/* /home/torabistore/store_project/static/css/style.css */
 
 /* Import Vazirmatn font from Google Fonts (or host it locally) */
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
 
 body {
-    font-family: 'Vazirmatn', sans-serif; /* Apply Vazirmatn to entire body */
-    background-color: #f8f9fa; /* Light background for the whole page */
-    color: #343a40; /* Darker text for better readability */
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Vazirmatn', sans-serif;
-    font-weight: 700; /* Make headings bolder */
+    font-weight: 700;
+    color: #212529;
 }
 
 .navbar {
-    background-color: #2c3e50 !important; /* Custom dark blue for navbar */
+    background-color: #2c3e50 !important;
 }
 
 .navbar-brand img {
-    transition: transform 0.3s ease; /* Smooth transition for logo */
+    transition: transform 0.3s ease;
 }
 
 .navbar-brand img:hover {
-    transform: scale(1.05); /* Slightly enlarge logo on hover */
+    transform: scale(1.05);
 }
 
 .product-card {
-    border-radius: 10px; /* Rounded corners for product cards */
-    overflow: hidden; /* Ensures image corners are rounded too */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-5px); /* Lift card slightly on hover */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .product-image {
-    border-bottom: 1px solid #eee; /* Subtle line below image */
+    border-bottom: 1px solid #eee;
 }
 
 .card-title {
-    color: #343a5e; /* Custom color for product titles */
+    color: #343a5e;
 }
 
 .text-primary {
-    color: #007bff !important; /* Ensure primary color is distinct blue */
+    color: #007bff !important;
 }
 .btn-outline-primary {
     border-color: #007bff;
@@ -87,67 +88,95 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom spacing for form fields in cards */
 .card-body .mb-3 {
-    margin-bottom: 10px !important; /* Adjust this value (e.g., 5px, 10px, 15px) */
+    margin-bottom: 10px !important;
 }
 
-/* Styles for form error messages */
-.card-body .text-danger { 
-    color: white !important; /* White color for dark background */
+/* Styles for form error messages on dark backgrounds (e.g., login/register cards) */
+.card.bg-dark .text-danger,
+.card.bg-dark .form-text { 
+    color: white !important;
 }
 
-.alert-danger { /* For non-field errors at the top of the form */
-    color: white !important; /* White text for alert background */
-    background-color: #dc3545 !important; /* Default Bootstrap red for alert background */
+.alert-danger {
+    color: white !important;
+    background-color: #dc3545 !important;
     border-color: #dc3545 !important;
 }
 
-/* Styles for form placeholders and help text (like password hints) */
-.form-control::placeholder { 
-    color: white !important; /* Make placeholder text white */
-    opacity: 1; /* Ensures full opacity for placeholder */
+/* Styles for form placeholders on dark backgrounds */
+.card.bg-dark .form-control::placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+    opacity: 1;
 }
 
-.form-text.text-muted { 
-    color: white !important; /* Make help text white */
-}
-
-/* --- Price and Availability Box Styles --- */
+/* Price and Availability Box Styles */
 .price-availability-box {
-    background-color: #f8f9fa; /* Light background for the box */
-    border: 1px solid #dee2e6; /* Light border */
-    border-radius: 8px; /* Rounded corners */
-    padding: 15px; /* Padding inside the box */
-    display: flex; /* Use flexbox for alignment */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center items horizontally */
-    /* Remove fixed margin-top and margin-bottom from here if they are in HTML */
-    margin-top: 20px; /* Space from element above */
-    margin-bottom: 20px; /* Space from element below */
-    max-width: 250px; /* <--- کوچکتر کردن عرض کادر (تغییر از 300px به 250px) */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* سایه ملایم */
-    margin-left: auto; /* برای وسط قرار گرفتن افقی */
-    margin-right: auto; /* برای وسط قرار گرفتن افقی */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 250px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-left: auto;
+    margin-right: auto;
 }
 .price-availability-box .price {
-    font-size: 2rem; /* <--- کوچکتر کردن سایز قیمت (تغییر از 2.5rem به 2rem) */
-    color: #007bff; /* Primary color */
-    margin-bottom: 8px; /* فاصله کمتر بین قیمت و موجودی */
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
 }
 .price-availability-box .availability {
-    font-size: 1rem; /* <--- کوچکتر کردن سایز متن موجودی (تغییر از 1.1rem به 1rem) */
-    padding: .4em .7em; /* Adjust padding for badge */
+    font-size: 1.1rem;
+    padding: .5em .8em;
 }
 
-/* --- Styles for pages with light backgrounds (e.g., About Us, Contact Us) --- */
-.container.py-5 {
-    color: #212529; /* Darker text color for general content on light background */
+/* General text colors for light background pages */
+.container.my-5 p,
+.container.my-5 ul li,
+.container.my-5 .form-label,
+.container.my-5 strong {
+    color: #212529 !important;
 }
-.container.py-5 h1, .container.py-5 h2, .container.py-5 h3, .container.py-5 h4, .container.py-5 h5, .container.py-5 h6 {
-    color: #212529; /* Ensure headings are dark */
+.container.my-5 .text-muted {
+    color: #495057 !important;
 }
-.container.py-5 p {
-    color: #495057; /* Slightly lighter dark for paragraphs */
+.container.my-5 a {
+    color: #007bff !important;
 }
-.container.py-5 .text-muted {
-    color: #6c757d !important; /* Ensure muted text is readable */
+.container.my-5 a.text-info {
+    color: #00bfff !important;
+}
+
+/* --- Homepage specific styles --- */
+/* Assuming your main content on homepage is within a hero-section or similar */
+/* This will make the text white on the darker hero image overlay */
+.hero-section p { /* <--- این برای متن اصلی صفحه اصلی اضافه شد */
+    color: white !important;
+}
+.hero-section h1 { /* <--- اگر عنوان اصلی هم نیاز به سفید شدن داشت */
+    color: white !important;
+}
+
+/* Wholesaler Card Style (Corrected for visibility) */
+.card.wholesaler-card {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    border-color: #f5c6cb !important;
+}
+.card.wholesaler-card .card-title,
+.card.wholesaler-card .card-text {
+    color: #721c24 !important;
+}
+.card.wholesaler-card .btn-light {
+    background-color: #721c24 !important;
+    color: white !important;
+}
+.card.wholesaler-card .btn-light:hover {
+    background-color: #dc3545 !important;
+    color: white !important;
 }
