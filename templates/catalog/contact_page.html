@@ -1,48 +1,77 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %} {# اگر از widget_tweaks استفاده میکنی #}
 {% block title %}تماس با ما{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <header class="text-center mb-5">
-        <h1 class="display-4 fw-bold">تماس با ما</h1>
-        <p class="lead text-muted">راه‌های ارتباطی با فروشگاه لوازم خانگی ترابی</p>
-        <hr>
-    </header>
-
-    <div class="row g-4">
-        <div class="col-md-6">
-            <h3>اطلاعات تماس</h3>
-            <ul class="list-unstyled mt-4">
-                <li class="d-flex mb-3 align-items-center">
-                    <i class="bi bi-geo-alt-fill fs-4 me-3 text-dark"></i>
-                    <div>
-                        <strong>آدرس:</strong>
-                        <p class="mb-0">کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9</p>
-                    </div>
+    <h1 class="text-center mb-4">تماس با ما</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <p class="lead text-center">
+                برای هرگونه سوال، پیشنهاد یا انتقاد، می‌توانید از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
+            </p>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-geo-alt-fill me-2"></i> 
+                    <strong class="me-2">آدرس:</strong> کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9
                 </li>
-                <li class="d-flex mb-3 align-items-center">
-                    <i class="bi bi-telephone-fill fs-4 me-3 text-dark"></i>
-                    <div>
-                        <strong>تلفن ثابت:</strong>
-                        <p class="mb-0" dir="ltr">034 - 32733888</p>
-                    </div>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-telephone-fill me-2"></i>
+                    <strong class="me-2">تلفن ثابت:</strong> 
+                    <p class="mb-0" dir="ltr">034 - 32733888</p>
                 </li>
-                <li class="d-flex mb-3 align-items-center">
-                    <i class="bi bi-phone-fill fs-4 me-3 text-dark"></i>
-                    <div>
-                        <strong>تلفن همراه (واتس‌اپ):</strong>
-                        <p class="mb-0" dir="ltr">0912 089 0108</p>
-                    </div>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-phone-fill me-2"></i>
+                    <strong class="me-2">تلفن همراه (واتس‌اپ):</strong> 
+                    <p class="mb-0" dir="ltr">0912 089 0108</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-envelope-fill me-2"></i>
+                    <strong class="me-2">ایمیل:</strong> info@torabistore.com
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                    <i class="bi bi-clock-fill me-2"></i>
+                    <strong class="me-2">ساعات کاری:</strong> شنبه تا پنجشنبه، 9 صبح تا 6 عصر
                 </li>
             </ul>
-        </div>
-        <div class="col-md-6">
-            <h3 class="mb-4">موقعیت ما روی نقشه</h3>
-            <div class="ratio ratio-16x9 mt-4 rounded shadow">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3274.673832159034!2d57.0601243152358!3d30.28689998178824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f1e7b3a4b0d1e5d%3A0x6b4f1b8f0d3e4e1a!2z2YXYs9iq2LTar9in2Ycg2YXYs9in2YbYqtmG!5e0!3m2!1sen!2s!4v1624880000000" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
+
+            <h4 class="mb-3 text-center">فرم تماس</h4>
+            <p class="text-center text-muted">لطفاً فرم زیر را پر کنید تا در اسرع وقت با شما تماس بگیریم.</p>
+
+            {# نمایش پیام‌های Django (مثلاً پیام موفقیت یا خطا) #}
+            {% if messages %}
+                <div class="container mb-4">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field|attr:"class:form-control" }}
+                        {% if field.help_text %}<div class="form-text text-muted">{{ field.help_text }}</div>{% endif %}
+                        {% for error in field.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary w-100">ارسال پیام</button>
+            </form>
         </div>
     </div>
 </div>
+{% comment %} اگر Bootstrap Icons رو استفاده نمیکنی، این خط رو کامنت کن یا پاک کن #}
+{# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> #}
 {% endblock %}

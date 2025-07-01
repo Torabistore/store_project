@@ -1,7 +1,9 @@
-# catalog/views.py
+# D:\store_project\catalog\views.py
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect # اضافه شدن redirect
+from django.contrib import messages # اضافه شدن messages
 from .models import Product, Category
+from .forms import ContactForm # <--- این خط اضافه شد
 
 def homepage(request):
     recent_products = Product.objects.all().order_by('-created_at')[:8]
@@ -29,10 +31,20 @@ def category_products(request, slug):
         'title': f'محصولات دسته {category.name}'
     })
 
-# =========== ویو جدید برای صفحه "درباره ما" ===========
-def about_page(request): # <--- این تابع اضافه شد
+def about_page(request): 
     return render(request, 'catalog/about_page.html')
 
 # =========== ویو جدید برای صفحه "تماس با ما" ===========
-def contact_page(request): # <--- این تابع اضافه شد
-    return render(request, 'catalog/contact_page.html')
+def contact_page(request): # <--- این تابع تغییر کرد
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # اینجا میتونی کارهایی مثل ارسال ایمیل، ذخیره در دیتابیس و ... انجام بدی
+            # مثلاً: send_mail(form.cleaned_data['subject'], form.cleaned_data['message'], form.cleaned_data['email'], ['info@torabistore.com'])
+            messages.success(request, 'پیام شما با موفقیت ارسال شد!')
+            return redirect('catalog:contact_page') # بعد از ارسال موفق، ریدایرکت به همین صفحه
+        else:
+            messages.error(request, 'لطفاً خطاهای فرم را برطرف کنید.')
+    else:
+        form = ContactForm()
+    return render(request, 'catalog/contact_page.html', {'form': form})
