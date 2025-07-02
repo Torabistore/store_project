@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}پروفایل کاربری{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark text-white shadow-lg">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">پروفایل کاربری</h2>
+                    <p class="text-white-50">سلام، {{ user.first_name }} {{ user.last_name }} عزیز!</p>
+                    <ul class="list-group list-group-flush bg-dark">
+                        <li class="list-group-item bg-dark text-white"><strong>شماره همراه:</strong> {{ user.mobile_number }}</li>
+                        <li class="list-group-item bg-dark text-white"><strong>نام کاربری (سیستمی):</strong> {{ user.username }}</li>
+                        <li class="list-group-item bg-dark text-white"><strong>تاریخ عضویت:</strong> {{ user.date_joined|date:"Y/m/d" }}</li>
+                    </ul>
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'accounts:logout' %}" class="btn btn-danger">خروج از حساب</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
