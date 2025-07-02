@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'catalog/base.html' %} {# این خط اصلاح شد #}
 {% load static %}
-{% load custom_filters %} 
+{% load custom_filters %} {# اگر فیلتر custom_filters.py دارید، این را نگه دارید، در غیر این صورت حذف کنید #}
 
 {% block title %}{{ product.name }}{% endblock %}
 
@@ -37,6 +37,7 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         margin-left: auto;
         margin-right: auto;
+        color: #212529; /* برای هماهنگی با متن داخل باکس */
     }
     .price-availability-box .price {
         font-size: 2.5rem;
@@ -56,102 +57,138 @@
     .container.my-5 h6,
     .container.my-5 p,
     .container.my-5 ul li {
-        color: #212529;
+        color: #f8f9fa; /* تغییر به رنگ روشن برای تم تیره */
     }
     .container.my-5 .text-muted {
-        color: #495057 !important;
+        color: #adb5bd !important; /* رنگ روشن‌تر برای متن muted */
     }
-    /* Wholesaler Card Style (Original style, we will fix it later in style.css) */
+    /* Wholesaler Card Style */
     .wholesaler-card {
-        background-color: #f8d7da; /* Placeholder: should be replaced by your desired color */
-        color: #721c24; /* Placeholder: should be replaced by your desired color */
-        border-color: #f5c6cb; /* Placeholder: should be replaced by your desired color */
+        background-color: #343a40; /* هماهنگی با تم تیره اصلی */
+        color: #f8f9fa;
+        border-color: #495057;
     }
     .wholesaler-card .card-title,
     .wholesaler-card .card-text {
-        color: #721c24; /* Placeholder */
+        color: #f8f9fa;
     }
     .wholesaler-card .btn-light {
-        background-color: #721c24; /* Placeholder */
-        color: white; /* Placeholder */
+        background-color: #f8f9fa;
+        color: #212529; /* رنگ دکمه برای متن تیره */
     }
     .wholesaler-card .btn-light:hover {
-        background-color: #dc3545; /* Placeholder */
-        color: white; /* Placeholder */
+        background-color: #e2e6ea;
+        color: #212529;
     }
 </style>
 
 <div class="container my-5">
     <div class="row g-5">
         <div class="col-lg-6">
-            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div id="productCarousel" class="carousel slide shadow-sm rounded border bg-white" data-bs-ride="carousel">
                 <div class="carousel-inner rounded">
-                    {% with main_image=product.images.first %}
-                    {% if main_image and main_image.image %}
+                    {# نمایش تصویر اصلی Product #}
+                    {% if product.image %}
                     <div class="carousel-item active">
-                        <img src="{{ main_image.image.url }}" class="d-block w-100 img-fluid" alt="{{ product.name }}" style="max-height: 400px; object-fit: contain;">
+                        <img src="{{ product.image.url }}" class="d-block w-100" style="height: 450px; object-fit: contain; padding: 1rem;" alt="{{ product.name }}">
                     </div>
                     {% else %}
                     <div class="carousel-item active">
-                        <img src="{% static 'images/placeholder.png' %}" class="d-block w-100 img-fluid" alt="تصویر موجود نیست" style="max-height: 400px; object-fit: contain;">
+                        <img src="{% static 'images/placeholder.png' %}" class="d-block w-100" style="height: 450px; object-fit: contain; padding: 1rem;" alt="تصویر موجود نیست">
                     </div>
                     {% endif %}
-                    {% endwith %}
 
+                    {# نمایش تصاویر گالری ProductImage #}
                     {% for img in product.images.all %}
-                        {% if not forloop.first or not product.images.first %} 
+                        {% if not img.is_main %} {# فقط تصاویری که اصلی نیستند را نمایش بده #}
                         <div class="carousel-item">
-                            <img src="{{ img.image.url }}" class="d-block w-100 img-fluid" alt="{{ product.name }}" style="max-height: 400px; object-fit: contain;">
+                            <img src="{{ img.image.url }}" class="d-block w-100" style="height: 450px; object-fit: contain; padding: 1rem;" alt="{{ product.name }}">
                         </div>
                         {% endif %}
                     {% endfor %}
                 </div>
-                {% if product.images.all.count > 1 %}
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">قبلی</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">بعدی</span>
-                </button>
+                {# کنترل‌های اسلایدشو فقط اگر بیشتر از یک تصویر وجود دارد #}
+                {% if product.image or product.images.all.count > 0 %} {# حداقل یک تصویر (اصلی یا گالری) باشد #}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">قبلی</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">بعدی</span>
+                    </button>
                 {% endif %}
             </div>
         </div>
 
         <div class="col-lg-6">
             <h1 class="display-5 fw-bold">{{ product.name }}</h1>
+            <p class="text-white-50 fs-5 mb-4">{{ product.brand }} - مدل: {{ product.sku }}</p>
+
+            {# نمایش قیمت اصلی یا قیمت Variantها #}
+            {% if product.variants.all %} {# اگر Variant وجود دارد #}
+                <h4 class="mt-4">گزینه‌های محصول:</h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped table-hover rounded overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th scope="col">نام گزینه</th>
+                                <th scope="col">قیمت (تومان)</th>
+                                <th scope="col">کد کالا</th>
+                                <th scope="col">وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for variant in product.variants.all %}
+                            <tr>
+                                <td>{{ variant.name }}</td>
+                                <td>{{ variant.price|floatformat:"0" }} تومان</td>
+                                <td>{{ variant.sku }}</td>
+                                <td>
+                                    {% if variant.available %}
+                                        <span class="badge bg-success">موجود</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">ناموجود</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% elif product.price is not None %} {# اگر Variant ندارد و قیمت اصلی دارد #}
+                <h2 class="display-6 fw-bold mb-4">
+                    {{ product.price|floatformat:"0" }} تومان
+                </h2>
+            {% else %} {# اگر نه Variant دارد و نه قیمت اصلی #}
+                <h2 class="display-6 fw-bold mb-4">
+                    قیمت: تماس بگیرید
+                </h2>
+            {% endif %}
+
             <hr class="border-secondary">
             
             {% if product.description %}
+                <h4 class="mt-4">توضیحات محصول:</h4>
                 <div style="text-align: justify; line-height: 1.8;" class="mb-4">{{ product.description|linebreaksbr }}</div>
             {% endif %}
 
             {% if product.specifications %}
-                <h4 class="mt-4">مشخصات محصول:</h4> 
+                <h4 class="mt-4">مشخصات فنی:</h4> 
                 <ul class="list-unstyled">
-                    {% for spec_line in product.specifications|split_by_newline %}
+                    {% for spec_line in product.specifications|split_by_newline %} {# فرض بر وجود فیلتر split_by_newline #}
                         <li>{{ spec_line }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
             
-            <div class="card price-availability-box mx-auto">
-                <span class="price fw-bold">{{ product.price|floatformat:"0" }} تومان</span>
-                {% if product.available %}
-                    <span class="badge bg-success availability rounded-pill">موجود در انبار</span>
-                {% else %}
-                    <span class="badge bg-danger availability rounded-pill">ناموجود</span>
-                {% endif %}
-            </div>
-
             <div class="card wholesaler-card text-center my-5 shadow">
                 <div class="card-body">
                     <h5 class="card-title fw-bold">همکار گرامی</h5>
                     <p class="card-text">برای استعلام قیمت عمده و ثبت سفارش، لطفاً با ما تماس بگیرید.</p>
                     <a href="tel:09120890108" class="btn btn-light btn-lg">
                         <i class="bi bi-telephone-outbound-fill me-2"></i>
-                         تماس بگیرید
+                        تماس بگیرید
                     </a>
                 </div>
             </div>
@@ -170,16 +207,21 @@
             <div class="col">
                 <a href="{% url 'catalog:product_detail' pk=p.pk %}" class="text-decoration-none">
                     <div class="card h-100 shadow-sm">
-                        {% with related_main_image=p.images.first %}
-                            {% if related_main_image and related_main_image.image %}
-                            <img src="{{ related_main_image.image.url }}" class="card-img-top" alt="{{ p.name }}" style="height: 200px; object-fit: contain;">
-                            {% else %}
-                            <img src="{% static 'images/placeholder.png' %}" class="card-img-top" alt="تصویر موجود نیست" style="height: 200px; object-fit: contain;">
-                            {% endif %}
-                        {% endwith %}
+                        {% if p.image %}
+                        <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}" style="height: 200px; object-fit: contain;">
+                        {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" class="card-img-top" alt="تصویر موجود نیست" style="height: 200px; object-fit: contain;">
+                        {% endif %}
                         <div class="card-body">
                             <h5 class="card-title fw-bold">{{ p.name }}</h5>
-                            <span class="text-primary fw-bold">{{ p.price|floatformat:"0" }} تومان</span>
+                            {# نمایش قیمت محصول مشابه #}
+                            {% if p.variants.all %}
+                                <span class="text-primary fw-bold">شروع قیمت از {{ p.variants.first.price|floatformat:"0" }} تومان</span>
+                            {% elif p.price is not None %}
+                                <span class="text-primary fw-bold">{{ p.price|floatformat:"0" }} تومان</span>
+                            {% else %}
+                                <span class="text-primary fw-bold">تماس بگیرید</span>
+                            {% endif %}
                         </div>
                     </div>
                 </a>
