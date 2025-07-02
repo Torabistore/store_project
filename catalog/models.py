@@ -24,14 +24,12 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='اسلاگ')
     description = models.TextField(blank=True, verbose_name='توضیحات')
     
-    # <--- این خط قبلا کامنت بود و برای رفع خطای NOT NULL constraint failed فعال شد --->
-    # این فیلد اختیاری است چون قیمت اصلی می‌تواند از Variantها گرفته شود.
     price = models.DecimalField(
         max_digits=10, 
         decimal_places=0, 
-        blank=True,      # اجازه می‌دهد فیلد خالی باشد
-        null=True,       # اجازه می‌دهد در دیتابیس NULL باشد
-        verbose_name='قیمت اصلی (تومان)' # نام واضح‌تر
+        blank=True,      
+        null=True,       
+        verbose_name='قیمت اصلی (تومان)'
     ) 
 
     available = models.BooleanField(default=True, verbose_name='موجود است')
@@ -48,12 +46,12 @@ class Product(models.Model):
         ]
 
     def get_absolute_url(self):
-        return reverse('catalog:product_detail', args=[self.id]) # or pk=self.pk if you use pk in urls.py
+        return reverse('catalog:product_detail', args=[self.id])
 
     def __str__(self):
         return self.name
 
-# =========== مدل ProductVariant برای گزینه‌های محصول ===========
+# ProductVariant model for product options (like "rice plate")
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE, verbose_name='محصول اصلی')
     name = models.CharField(max_length=100, verbose_name='نام گزینه (مثلاً بشقاب برنج)')
@@ -69,7 +67,7 @@ class ProductVariant(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.name}"
 
-# =========== مدل ProductImage برای گالری تصاویر محصول ===========
+# ProductImage model for product gallery images
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name='محصول')
     image = models.ImageField(upload_to='products/gallery/%Y/%m/%d', verbose_name='تصویر')
