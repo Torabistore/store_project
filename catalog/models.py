@@ -1,5 +1,3 @@
-# catalog/models.py
-
 from django.db import models
 from django.urls import reverse
 from django.db.models import Index
@@ -24,17 +22,13 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, verbose_name='دسته بندی')
     name = models.CharField(max_length=200, db_index=True, verbose_name='نام محصول')
     slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='اسلاگ')
-    # image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, verbose_name='تصویر') # این خط رو کامنت یا حذف کن اگر از ProductImage استفاده میکنی
     description = models.TextField(blank=True, verbose_name='توضیحات')
-    price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='قیمت (تومان)')
+    # price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='قیمت (تومان)') # <--- این خط را کامنت یا حذف کنید
     available = models.BooleanField(default=True, verbose_name='موجود است')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='تاریخ بروزرسانی')
+    specifications = models.TextField(blank=True, null=True, verbose_name="مشخصات محصول (هر خط یک مشخصه)")
     
-    # --- فیلد جدید برای مشخصات محصول ---
-    specifications = models.TextField(blank=True, null=True, verbose_name="مشخصات محصول (هر خط یک مشخصه)") # <--- این فیلد اضافه شد
-    # -----------------------------------
-
     class Meta:
         ordering = ('name',)
         verbose_name = 'محصول'
@@ -49,7 +43,23 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-# =========== مدل جدید ProductImage برای گالری تصاویر محصول ===========
+# =========== مدل جدید ProductVariant برای گزینه‌های محصول (مثل بشقاب برنج) ===========
+class ProductVariant(models.Model): # <--- این مدل جدید اضافه شد
+    product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE, verbose_name='محصول اصلی')
+    name = models.CharField(max_length=100, verbose_name='نام گزینه (مثلاً بشقاب برنج)')
+    price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='قیمت این گزینه (تومان)')
+    sku = models.CharField(max_length=50, blank=True, verbose_name='کد کالا (SKU)')
+    available = models.BooleanField(default=True, verbose_name='موجود است')
+    
+    class Meta:
+        verbose_name = 'گزینه محصول'
+        verbose_name_plural = 'گزینه‌های محصول'
+        unique_together = ('product', 'name') # اطمینان از عدم تکرار نام گزینه برای یک محصول
+
+    def __str__(self):
+        return f"{self.product.name} - {self.name}"
+
+# =========== مدل ProductImage برای گالری تصاویر محصول (بدون تغییر) ===========
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name='محصول')
     image = models.ImageField(upload_to='products/gallery/%Y/%m/%d', verbose_name='تصویر')
