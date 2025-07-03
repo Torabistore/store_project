@@ -1,11 +1,10 @@
-/* Import Vazirmatn font */
+```css
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
 
-/* بدنه اصلی سایت */
 body {
     font-family: 'Vazirmatn', sans-serif;
-    background-color: #212529; /* پس‌زمینه تیره کل سایت */
-    color: #f8f9fa; /* متن روشن برای خوانایی */
+    background-color: #212529;
+    color: #f8f9fa;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -13,9 +12,8 @@ body {
     flex-direction: column;
 }
 
-/* لینک‌ها */
 a {
-    color: #0d6efd; /* رنگ آبی لینک‌ها */
+    color: #0d6efd;
     text-decoration: none;
 }
 
@@ -24,17 +22,15 @@ a:hover, a:focus {
     text-decoration: underline;
 }
 
-/* کانتینر اصلی محتوا */
 .main-content {
     flex: 1;
     padding: 20px;
-    background-color: #1e2125; /* پس‌زمینه کمی روشن‌تر برای تمایز */
+    background-color: #1e2125;
     color: #f8f9fa;
 }
 
-/* ناوبری (Navbar) */
 .navbar {
-    background-color: #343a40 !important; /* پس‌زمینه تیره */
+    background-color: #343a40 !important;
 }
 
 .navbar-brand img {
@@ -46,7 +42,6 @@ a:hover, a:focus {
     transform: scale(1.05);
 }
 
-/* منوی آبشاری */
 .dropdown-menu {
     background-color: #343a40;
 }
@@ -61,7 +56,6 @@ a:hover, a:focus {
     color: #fff;
 }
 
-/* دکمه‌ها */
 .btn-outline-light {
     color: #f8f9fa;
     border-color: #f8f9fa;
@@ -92,7 +86,6 @@ a:hover, a:focus {
     color: white;
 }
 
-/* کارت‌های محصولات */
 .product-card {
     border-radius: 10px;
     overflow: hidden;
@@ -110,12 +103,10 @@ a:hover, a:focus {
     border-bottom: 1px solid #495057;
 }
 
-/* عنوان محصولات */
 .card-title {
     color: #f8f9fa;
 }
 
-/* صفحه جزئیات محصول - جعبه قیمت و موجودی */
 .price-availability-box {
     background-color: #343a40;
     border: 1px solid #495057;
@@ -138,8 +129,6 @@ a:hover, a:focus {
     padding: 0.5em 0.8em;
 }
 
-/* فرم‌ها داخل کارت (مثلاً فرم ورود/ثبت نام) */
-/* برای فرم‌ها در صفحه‌های ورود/ثبت نام که پس‌زمینه تیره هستند */
 .card.bg-dark .form-control,
 .card.bg-dark .form-label,
 .card.bg-dark .text-danger,
@@ -152,14 +141,12 @@ a:hover, a:focus {
     opacity: 1;
 }
 
-/* هشدارهای خطا */
 .alert-danger {
     color: white !important;
     background-color: #dc3545 !important;
     border-color: #dc3545 !important;
 }
 
-/* پاورقی (Footer) */
 footer.bg-light {
     background-color: #343a40 !important;
     color: #adb5bd;
@@ -167,7 +154,6 @@ footer.bg-light {
     text-align: center;
 }
 
-/* صفحه بندی */
 .pagination .page-item .page-link {
     color: #0d6efd;
     border-radius: 5px !important;
@@ -182,3 +168,4 @@ footer.bg-light {
 .pagination .page-item.disabled .page-link {
     color: #6c757d;
 }
+```
