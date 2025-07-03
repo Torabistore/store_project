@@ -5,56 +5,58 @@
 
 {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card bg-dark text-white shadow-lg">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">ورود به حساب کاربری</h2>
-                    <form method="post">
-                        {% csrf_token %}
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger" role="alert" style="color: white !important; background-color: #dc3545 !important; border-color: #dc3545 !important;">
-                                {% for error in form.non_field_errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% elif form.errors and not form.non_field_errors %}
-                            <div class="alert alert-danger" role="alert" style="color: white !important; background-color: #dc3545 !important; border-color: #dc3545 !important;">
-                                شماره همراه یا رمز عبور نامعتبر است.
-                            </div>
-                        {% endif %}
-                        
-                        {# Render all form fields dynamically including labels #}
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {{ field|attr:"class:form-control"|attr:"required:required" }}
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1" style="color: white !important;">
-                                        {% for error in field.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if field.help_text %}
-                                    <div class="form-text text-muted" style="color: white !important;">{{ field.help_text }}</div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card bg-dark text-white shadow-lg">
+        <div class="card-body p-4">
+          <h2 class="card-title text-center mb-4">ورود به حساب کاربری</h2>
+          
+          <form method="post">
+            {% csrf_token %}
 
-                        <button type="submit" class="btn btn-primary w-100 mt-4">ورود</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <p class="mb-1">
-                            <a href="{% url 'accounts:password_reset_request' %}" class="text-info" style="color: #00bfff !important;">رمز عبور خود را فراموش کرده‌اید؟</a> {# رنگ آبی روشن‌تر #}
-                        </p>
-                        <p class="mb-0">
-                            ثبت نام نکرده‌اید؟ <a href="{% url 'accounts:register' %}" class="text-info" style="color: #00bfff !important;">ثبت نام کنید</a> {# رنگ آبی روشن‌تر #}
-                        </p>
-                    </div>
-                </div>
-            </div>
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger text-center" role="alert">
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% elif form.errors %}
+              <div class="alert alert-danger text-center" role="alert">
+                شماره همراه یا رمز عبور نامعتبر است.
+              </div>
+            {% endif %}
+
+            {% for field in form %}
+              <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label text-light">{{ field.label }}</label>
+                {{ field|add_class:"form-control bg-dark text-white border-secondary"|attr:"required:required" }}
+                {% if field.errors %}
+                  <div class="form-text text-danger mt-1">
+                    {% for error in field.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                {% if field.help_text %}
+                  <div class="form-text text-secondary small">{{ field.help_text }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-outline-light w-100 mt-3">ورود</button>
+          </form>
+
+          <div class="text-center mt-4">
+            <p class="mb-1">
+              <a href="{% url 'accounts:password_reset_request' %}" class="text-info">رمز عبور خود را فراموش کرده‌اید؟</a>
+            </p>
+            <p class="mb-0">
+              ثبت‌نام نکرده‌اید؟ <a href="{% url 'accounts:register' %}" class="text-info">ثبت‌نام کنید</a>
+            </p>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
