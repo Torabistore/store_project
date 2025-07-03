@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}سفارشات من{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <h2 class="text-3xl font-bold text-white mb-6">سفارشات من</h2>
+    {% if orders %}
+        <ul class="space-y-4">
+            {% for order in orders %}
+                <li class="p-4 bg-gray-800 rounded-lg shadow-md">
+                    <p>شماره سفارش: {{ order.id }}</p>
+                    <p>تاریخ ثبت: {{ order.created_at|date:"Y/m/d H:i" }}</p>
+                    <p>وضعیت: {{ order.status }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-300">هیچ سفارشی ثبت نکرده‌اید.</p>
+    {% endif %}
+</div>
+{% endblock %}
