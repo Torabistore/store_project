@@ -111,3 +111,7 @@ def logout_view(request):
 @login_required
 def profile_view(request): # <--- این تابع اضافه شد
     return render(request, 'accounts/profile.html', {'user': request.user})
+@login_required
+def order_list(request):
+    # در آینده می‌تونه لیست واقعی سفارش‌ها رو از مدل بگیره
+    return render(request, 'accounts/order_list.html')
