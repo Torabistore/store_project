@@ -12,4 +12,5 @@ urlpatterns = [
     path('category/<slug:slug>/', views.category_products, name='category_products'),
     path('about/', views.about_page, name='about_page'), # <--- این خط اضافه شد
     path('contact/', views.contact_page, name='contact_page'), # <--- این خط اضافه شد
+    path('search/', views.search_results, name='search_results'),
 ]

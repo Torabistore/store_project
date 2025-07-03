@@ -1,18 +1,13 @@
-# settings.py
-
 from pathlib import Path
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# REMEMBER TO CHANGE THIS IN PRODUCTION AND KEEP IT SECRET
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SECRET_KEY = 'django-insecure-REPLACE_THIS_WITH_YOUR_SECRET_KEY'
 
-DEBUG = True # <--- مطمئن شو که DEBUG=True هست
+DEBUG = True  # در حالت توسعه True باشه
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'torabistore.pythonanywhere.com'] # <--- نام دامنه سایتت رو اینجا اضافه کن
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'torabistore.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,7 +16,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Your applications
+
     'catalog.apps.CatalogConfig',
     'accounts.apps.AccountsConfig',
     'widget_tweaks',
@@ -42,7 +37,7 @@ ROOT_URLCONF = 'store_config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # این خط را تغییر دهید
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,12 +78,12 @@ TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/static/' # <--- این هم با اسلش در ابتدا باشه
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = '/home/torabistore/store_project/staticfiles/' # <--- این خط اصلاح شد - به مسیر مطلق و با اسلش در انتها
+STATIC_ROOT = '/home/torabistore/store_project/staticfiles/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/torabistore/store_project/media/' # <--- این هم به مسیر مطلق و با اسلش در انتها باشه
+MEDIA_ROOT = '/home/torabistore/store_project/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

@@ -1,80 +1,84 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %} 
+{% load widget_tweaks %}
+
 {% block title %}تماس با ما{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="text-center mb-4">تماس با ما</h1>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <p class="lead text-center">
-                برای هرگونه سوال، پیشنهاد یا انتقاد، می‌توانید از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
-            </p>
-            <ul class="list-group list-group-flush mb-4">
-                <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-geo-alt-fill me-2"></i> 
-                    <strong class="me-2">آدرس:</strong> کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9
-                </li>
-                <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-telephone-fill me-2"></i>
-                    <strong class="me-2">تلفن ثابت:</strong> 
-                    <p class="mb-0" dir="ltr">034 - 32733888</p>
-                </li>
-                <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-phone-fill me-2"></i>
-                    <strong class="me-2">تلفن همراه (واتس‌اپ):</strong> 
-                    <p class="mb-0" dir="ltr">0912 089 0108</p>
-                </li>
-                <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-envelope-fill me-2"></i>
-                    <strong class="me-2">ایمیل:</strong> info@torabistore.com
-                </li>
-                <li class="list-group-item d-flex align-items-center">
-                    <i class="bi bi-clock-fill me-2"></i>
-                    <strong class="me-2">ساعات کاری:</strong> شنبه تا پنجشنبه، 9 صبح تا 1 ظهر و بعد از ظهر از 4 تا 7 شب
-                </li>
-            </ul>
-            
-            <h4 class="mb-3 text-center">فرم تماس</h4>
-            <p class="text-center text-muted">لطفاً فرم زیر را پر کنید تا در اسرع وقت با شما تماس بگیریم.</p>
-            
-            {% if messages %}
-                <div class="container mb-4">
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} text-center" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+  <h1 class="text-center mb-4 text-light">تماس با ما</h1>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <p class="lead text-center text-light">
+        برای هرگونه سوال، پیشنهاد یا انتقاد، می‌توانید از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
+      </p>
+
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item bg-dark text-light d-flex align-items-center">
+          <i class="bi bi-geo-alt-fill me-2"></i>
+          <strong class="me-2">آدرس:</strong> کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex align-items-center">
+          <i class="bi bi-telephone-fill me-2"></i>
+          <strong class="me-2">تلفن ثابت:</strong> <p class="mb-0 ms-2" dir="ltr">034 - 32733888</p>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex align-items-center">
+          <i class="bi bi-phone-fill me-2"></i>
+          <strong class="me-2">تلفن همراه (واتس‌اپ):</strong> <p class="mb-0 ms-2" dir="ltr">0912 089 0108</p>
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex align-items-center">
+          <i class="bi bi-envelope-fill me-2"></i>
+          <strong class="me-2">ایمیل:</strong> info@torabistore.com
+        </li>
+        <li class="list-group-item bg-dark text-light d-flex align-items-center">
+          <i class="bi bi-clock-fill me-2"></i>
+          <strong class="me-2">ساعات کاری:</strong> شنبه تا پنجشنبه، 9 صبح تا 1 ظهر و بعد از ظهر از 4 تا 7 شب
+        </li>
+      </ul>
+
+      <h4 class="mb-3 text-center text-light">فرم تماس</h4>
+      <p class="text-center text-light">لطفاً فرم زیر را پر کنید تا در اسرع وقت با شما تماس بگیریم.</p>
+
+      {% if messages %}
+        <div class="container mb-4">
+          <div class="row justify-content-center">
+            <div class="col-md-12">
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            {% endif %}
-
-            <form method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {{ field|attr:"class:form-control" }}
-                        {% if field.help_text %}<div class="form-text text-muted">{{ field.help_text }}</div>{% endif %}
-                        {% for error in field.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
-                    </div>
-                {% endfor %}
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-                {% endif %}
-                <button type="submit" class="btn btn-primary w-100">ارسال پیام</button>
-            </form>
-
-            <h3 class="mt-4 text-center">موقعیت ما روی نقشه</h3>
-            <div class="ratio ratio-16x9 mt-3 mb-4 rounded shadow">
-                <iframe src="https://maps.google.com/maps?q=30.30255,57.07440&hl=es&z=14&output=embed" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              {% endfor %}
             </div>
-            
+          </div>
         </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label text-light">{{ field.label }}</label>
+            {{ field|add_class:"form-control bg-dark text-light border-secondary" }}
+            {% if field.help_text %}<div class="form-text text-light">{{ field.help_text }}</div>{% endif %}
+            {% for error in field.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+          </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-outline-light w-100">ارسال پیام</button>
+      </form>
+
+      <h3 class="mt-4 text-center text-light">موقعیت ما روی نقشه</h3>
+      <div class="ratio ratio-16x9 mt-3 mb-4 rounded shadow">
+        <iframe src="https://maps.google.com/maps?q=30.30255,57.07440&hl=es&z=14&output=embed"
+                width="600" height="450" style="border:0;"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
     </div>
+  </div>
 </div>
 {% endblock %}

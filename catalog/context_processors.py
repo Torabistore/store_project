@@ -1,10 +1,8 @@
-# catalog/context_processors.py
-
-from .models import Product
+from .models import Category
 
 def categories(request):
-    cats = Product.objects.values_list('category', flat=True).distinct().order_by('category')
-    current = request.resolver_match.kwargs.get('category_name') if request.resolver_match else None
+    cats = Category.objects.all().order_by('name')
+    current = request.resolver_match.kwargs.get('slug') if request.resolver_match else None
     return {
         'categories': cats,
         'current_category': current
