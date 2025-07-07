@@ -38,30 +38,40 @@ def product_detail(request, pk):
 def cart_view(request):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
-    order = Order.objects.filter(user=request.user, is_completed=False).first()
+    order = Order.objects.filter(user=request.user, status='pending').first()
     return render(request, 'catalog/cart.html', {'order': order})
 
 def cart_add(request, product_id):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
     product = get_object_or_404(Product, id=product_id, available=True)
-    order, created = Order.objects.get_or_create(user=request.user, is_completed=False)
-    order_item, created = OrderItem.objects.get_or_create(order=order, product=product, defaults={'price': product.price})
+
+    # پیدا کردن یا ایجاد سفارش با وضعیت 'pending'
+    order, created = Order.objects.get_or_create(user=request.user, status='pending')
+
+    order_item, created = OrderItem.objects.get_or_create(
+        order=order,
+        product=product,
+        defaults={'price': product.price}
+    )
     if not created:
         order_item.quantity += 1
         order_item.save()
-    order.total_price += product.price
+
+    # محاسبه مجموع کل سفارش (می‌تونی به دلخواه خودت تغییر بدی)
+    order.total_price = sum(item.price * item.quantity for item in order.items.all())
     order.save()
+
     messages.success(request, f'{product.name} به سبد خرید اضافه شد.')
     return redirect('catalog:cart')
 
 def cart_remove(request, item_id):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
-    order_item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__is_completed=False)
+    order_item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__status='pending')
     order = order_item.order
-    order.total_price -= order_item.price * order_item.quantity
     order_item.delete()
+    order.total_price = sum(item.price * item.quantity for item in order.items.all())
     order.save()
     messages.success(request, 'محصول از سبد خرید حذف شد.')
     return redirect('catalog:cart')
