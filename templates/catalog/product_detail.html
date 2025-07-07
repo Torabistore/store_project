@@ -1,35 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load widget_tweaks %} {# اضافه کنید اگر از widget_tweaks برای فرم استفاده می‌کنید #}
+{% load widget_tweaks %}
+{% load price_filters %}
 
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6"> {# container از base.html می‌آید #}
-    <h2 class="text-2xl font-bold my-4">{{ product.name }}</h2> {# تغییر از h2 معمولی #}
-    <div class="flex flex-col md:flex-row gap-6"> {# تغییر از row به flex و gap #}
-        <div class="w-full md:w-1/2"> {# تغییر از col-12 col-md-6 به w-full md:w-1/2 #}
-            {% with main_image=product.images.first %}
-                {% if main_image and main_image.image %}
-                    <img src="{{ main_image.image.url }}" class="w-full h-96 object-cover rounded-lg shadow-md mb-3" alt="{{ product.name }}"> {# تغییر از img-fluid و افزودن کلاس‌های Tailwind #}
-                {% else %}
-                    <img src="{% static 'images/placeholder.jpg' %}" class="w-full h-96 object-cover rounded-lg shadow-md mb-3" alt="محصول بدون تصویر"> {# تغییر از img-fluid و افزودن کلاس‌های Tailwind #}
-                {% endif %}
-            {% endwith %}
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold my-4">{{ product.name }}</h2>
+    <div class="flex flex-col md:flex-row gap-6">
+        <div class="w-full md:w-1/2">
+            {% comment %}
+                پیشنهاد می‌کنم main_image را در ویو تهیه کنید و اینجا فقط نمایش دهید.
+            {% endcomment %}
+            {% if main_image and main_image.image %}
+                <img src="{{ main_image.image.url }}" class="w-full h-96 object-cover rounded-lg shadow-md mb-3" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'images/placeholder.jpg' %}" class="w-full h-96 object-cover rounded-lg shadow-md mb-3" alt="محصول بدون تصویر">
+            {% endif %}
         </div>
-        <div class="w-full md:w-1/2"> {# تغییر از col-12 col-md-6 به w-full md:w-1/2 #}
-            <div class="product-card p-6"> {# تغییر از card به product-card و padding #}
-                {# card-body نیاز نیست، پدینگ را به product-card می‌دهیم #}
-                <h5 class="text-xl font-semibold mb-3">{{ product.name }}</h5> {# تغییر از card-title و اضافه کردن کلاس‌های Tailwind #}
-                <p class="text-gray-700 leading-relaxed mb-4">{{ product.description }}</p> {# تغییر از card-text و اضافه کردن کلاس‌های Tailwind #}
-                <p class="text-2xl font-bold text-blue-600 mb-6"><strong>قیمت:</strong> {{ product.price|floatformat:"0" }} تومان</p> {# تغییر از card-text و اضافه کردن کلاس‌های Tailwind #}
+        <div class="w-full md:w-1/2">
+            <div class="product-card p-6">
+                <h5 class="text-xl font-semibold mb-3">{{ product.name }}</h5>
+                <p class="text-gray-700 leading-relaxed mb-4">{{ product.description }}</p>
+                <p class="text-2xl font-bold text-blue-600 mb-6"><strong>قیمت:</strong> {{ product.price|floatformat:"0" }} تومان</p>
                 <form method="post" action="{% url 'catalog:add_to_cart' product.id %}">
                     {% csrf_token %}
-                    <div class="mb-4"> {# تغییر از mb-3 w-50 #}
-                        <label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">تعداد:</label> {# تغییر از form-label #}
-                        <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control-tailwind w-24 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"> {# تغییر از form-control و افزودن کلاس‌های Tailwind #}
+                    <div class="mb-4">
+                        <label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">تعداد:</label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1"
+                               class="w-24 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <button type="submit" class="btn-primary">افزودن به سبد خرید</button> {# استفاده از btn-primary #}
+                    <button type="submit" class="btn-primary hover:bg-blue-700 transition duration-300">افزودن به سبد خرید</button>
                 </form>
             </div>
         </div>

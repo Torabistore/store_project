@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load price_filters %}
 
 {% block title %}
 محصولات | فروشگاه ترابی
@@ -33,8 +34,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {% for product in products %}
                 <div class="bg-white rounded shadow hover:shadow-lg transition-all duration-300">
-                    {% if product.images.exists %}
-                        <img src="{{ product.images.first.image.url }}" class="w-full h-48 object-cover rounded-t" alt="{{ product.name }}">
+                    {% if product.images.all %}
+                        {% with main_image=product.images.first %}
+                            {% if main_image and main_image.image %}
+                                <img src="{{ main_image.image.url }}" class="w-full h-48 object-cover rounded-t" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.png' %}" class="w-full h-48 object-cover rounded-t" alt="تصویر پیش‌فرض">
+                            {% endif %}
+                        {% endwith %}
                     {% else %}
                         <img src="{% static 'images/placeholder.png' %}" class="w-full h-48 object-cover rounded-t" alt="تصویر پیش‌فرض">
                     {% endif %}
@@ -42,7 +49,7 @@
                         <h5 class="text-lg font-semibold mb-2">{{ product.name }}</h5>
                         <p class="text-gray-600 text-sm mb-2">{{ product.description|truncatechars:100 }}</p>
                         <p class="text-lg font-bold text-blue-500 mb-4">{{ product.price|floatformat:"0" }} تومان</p>
-                        <a href="{% url 'catalog:product_detail' product.id %}" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">مشاهده جزئیات</a>
+                        <a href="{% url 'catalog:product_detail' product.id %}" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 block text-center">مشاهده جزئیات</a>
                     </div>
                 </div>
             {% empty %}
@@ -62,27 +69,31 @@
                         </li>
                     {% else %}
                         <li>
-                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded">قبلی</span>
+                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">قبلی</span>
                         </li>
                     {% endif %}
+
                     {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <li>
-                                <span class="px-4 py-2 bg-blue-500 text-white rounded">{{ num }}</span>
-                            </li>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li>
-                                <a class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" href="?page={{ num }}">{{ num }}</a>
-                            </li>
+                        {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                            {% if num == page_obj.number %}
+                                <li>
+                                    <span class="px-4 py-2 bg-blue-500 text-white rounded">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
+
                     {% if page_obj.has_next %}
                         <li>
                             <a class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.next_page_number }}">بعدی</a>
                         </li>
                     {% else %}
                         <li>
-                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded">بعدی</span>
+                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">بعدی</span>
                         </li>
                     {% endif %}
                 </ul>

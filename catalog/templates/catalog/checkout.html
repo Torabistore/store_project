@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %} {# اضافه کنید اگر برای فرم‌ها نیاز دارید #}
+{% load price_filters %}
+
 
 {% block title %}
 تکمیل سفارش | فروشگاه ترابی
@@ -28,17 +30,18 @@
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6 text-right whitespace-nowrap">{{ item.product.name }}</td>
                             <td class="py-3 px-6 text-center">{{ item.quantity }}</td>
-                            <td class="py-3 px-6 text-center">{{ item.price|floatformat:"0" }} تومان</td>
-                            <td class="py-3 px-6 text-center">{{ item.total_price|floatformat:"0" }} تومان</td> {# فرض بر این است که item.total_price وجود دارد #}
+                            <td class="py-3 px-6 text-center">{{ item.price|price_format }} تومان</td>
+                            <td class="py-3 px-6 text-center">{{ item.total_price|price_format }} تومان</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                     <tfoot>
-                        <tr class="bg-gray-100 text-gray-800 font-bold">
-                            <td colspan="3" class="py-3 px-6 text-right">مبلغ کل قابل پرداخت:</td>
-                            <td colspan="1" class="py-3 px-6 text-center">{{ order.total_price|floatformat:"0" }} تومان</td>
-                        </tr>
-                    </tfoot>
+        <tr class="bg-gray-100 text-gray-800 font-bold">
+        <td colspan="3" class="py-3 px-6 text-right">مبلغ کل قابل پرداخت:</td>
+        <td colspan="1" class="py-3 px-6 text-center">{{ order.total_price|price_format }} تومان</td>
+    </tr>
+</tfoot>
+
                 </table>
             </div>
         </div>
