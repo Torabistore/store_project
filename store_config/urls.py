@@ -3,5 +3,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),  # همه مسیرهای catalog از اینجا وارد میشن
+
+    # مسیرهای اپلیکیشن catalog
+    path('', include('catalog.urls')),  
+
+    # مسیرهای اپلیکیشن accounts
+    path('accounts/', include('accounts.urls')),  
 ]
