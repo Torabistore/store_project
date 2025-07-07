@@ -8,11 +8,11 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
     
-    path('password-reset/', views.password_reset_request, name='password_reset_request'),
+    path('password-reset/', views.password_reset_request, name='reset_password'),
     path('verify-otp/', views.verify_otp, name='verify_otp'),
     path('set-new-password/<uidb64>/<token>/', views.set_new_password, name='set_new_password'),
-
+    
     path('profile/', views.profile_view, name='profile'),
     path('orders/', views.order_list_view, name='order_list'),
-    path('reset-password/', views.reset_password_view, name='reset_password'),
+    
 ]
