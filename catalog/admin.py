@@ -24,7 +24,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'available', 'created_at', 'updated_at', 'category', 'main_image_tag']
+    list_display = ['name', 'formatted_price', 'available', 'created_at', 'updated_at', 'category', 'main_image_tag']
     list_filter = ['available', 'created_at', 'updated_at', 'category']
     list_editable = ['available']
     prepopulated_fields = {'slug': ('name',)}
@@ -35,6 +35,10 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('category', 'name', 'slug', 'description', 'specifications', 'price', 'available')
         }),
     )
+
+    def formatted_price(self, obj):
+        return f"{obj.price:,.0f} تومان"
+    formatted_price.short_description = 'قیمت'
 
     def main_image_tag(self, obj):
         main_image = obj.images.filter(is_main=True).first() or obj.images.first()
