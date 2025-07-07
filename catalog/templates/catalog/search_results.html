@@ -1,19 +1,45 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}نتایج جستجو{% endblock %}
+{% block title %}
+نتایج جستجو برای "{{ query }}" | فروشگاه ترابی
+{% endblock %}
 
 {% block content %}
-<h2>نتایج جستجو برای "{{ query }}"</h2>
+<div class="container mx-auto px-4 py-6"> {# container از base.html می‌آید #}
+    <h2 class="text-2xl font-bold mb-6 text-center">نتایج جستجو برای "{{ query }}"</h2> {# اضافه کردن کلاس‌های Tailwind #}
 
-{% if page_obj %}
-    <ul>
-    {% for product in page_obj %}
-        <li><a href="{% url 'catalog:product_detail' pk=product.pk %}">{{ product.name }}</a></li>
-    {% empty %}
-        <li>موردی یافت نشد.</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>موردی یافت نشد.</p>
-{% endif %}
+    {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"> {# تغییر از row به grid و gap #}
+            {% for product in products %}
+                {# تغییر از col-* و mb-3 به mb-0 (اگر گپ در grid کافی باشد) #}
+                <div class="mb-0">
+                    <div class="product-card h-full flex flex-col"> {# استفاده از کلاس product-card و تنظیم ارتفاع و فلکس #}
+                        {% with main_image=product.images.first %}
+                            {% if main_image and main_image.image %}
+                                <img src="{{ main_image.image.url }}" class="product-image rounded-t-lg" alt="{{ product.name }}"> {# تغییر از card-img-top img-fluid #}
+                            {% else %}
+                                <img src="{% static 'images/placeholder.jpg' %}" class="product-image rounded-t-lg" alt="محصول بدون تصویر"> {# تغییر از card-img-top img-fluid #}
+                            {% endif %}
+                        {% endwith %}
+                        <div class="p-4 flex flex-col flex-1"> {# تغییر از card-body d-flex flex-column #}
+                            <h5 class="text-lg font-semibold mb-2">{{ product.name }}</h5> {# تغییر از card-title #}
+                            <p class="text-gray-600 text-sm mt-auto">{{ product.price|floatformat:"0" }} تومان</p> {# تغییر از card-text mt-auto #}
+                            <div class="mt-4">
+                                <a href="{% url 'catalog:product_detail' product.id %}" class="btn-primary">مشاهده جزئیات</a> {# استفاده از btn-primary #}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-blue-100 text-blue-800 border border-blue-300 rounded p-4 text-center" role="alert"> {# تغییر از alert alert-info #}
+            متاسفانه هیچ موردی برای جستجوی "{{ query }}" یافت نشد.
+        </div>
+        <div class="mt-6 text-center">
+            <a href="{% url 'catalog:product_list' %}" class="btn-secondary">بازگشت به همه محصولات</a> {# استفاده از btn-secondary #}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

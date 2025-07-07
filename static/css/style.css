@@ -1,171 +1,73 @@
-```css
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
-
+/* تنظیمات فونت و پایه */
 body {
-    font-family: 'Vazirmatn', sans-serif;
-    background-color: #212529;
-    color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  font-family: 'Vazirmatn', sans-serif;
 }
 
+/* لینک‌ها */
 a {
-    color: #0d6efd;
-    text-decoration: none;
+  color: #3b82f6; /* آبی Tailwind */
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-a:hover, a:focus {
-    color: #0a58ca;
-    text-decoration: underline;
+a:hover,
+a:focus {
+  color: #2563eb; /* آبی تیره‌تر */
+  text-decoration: underline;
 }
 
-.main-content {
-    flex: 1;
-    padding: 20px;
-    background-color: #1e2125;
-    color: #f8f9fa;
-}
-
-.navbar {
-    background-color: #343a40 !important;
-}
-
-.navbar-brand img {
-    height: 40px;
-    transition: transform 0.3s ease;
-}
-
-.navbar-brand img:hover {
-    transform: scale(1.05);
-}
-
-.dropdown-menu {
-    background-color: #343a40;
-}
-
-.dropdown-item {
-    color: #f8f9fa;
-}
-
-.dropdown-item:hover,
-.dropdown-item.active {
-    background-color: #495057;
-    color: #fff;
-}
-
-.btn-outline-light {
-    color: #f8f9fa;
-    border-color: #f8f9fa;
-}
-
-.btn-outline-light:hover {
-    background-color: #f8f9fa;
-    color: #212529;
-}
-
-.btn-outline-primary {
-    border-color: #0d6efd;
-    color: #0d6efd;
-}
-
-.btn-outline-primary:hover {
-    background-color: #0d6efd;
-    color: white;
-}
-
-.btn-outline-secondary {
-    border-color: #6c757d;
-    color: #6c757d;
-}
-
-.btn-outline-secondary:hover {
-    background-color: #6c757d;
-    color: white;
-}
-
+/* کارت محصولات */
 .product-card {
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #2c3e50;
-    color: #f8f9fa;
+  @apply bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  @apply transform -translate-y-1 shadow-xl;
 }
 
+/* تصویر محصول */
 .product-image {
-    border-bottom: 1px solid #495057;
+  @apply w-full h-48 object-cover border-b border-gray-300;
 }
 
+/* عنوان محصول */
 .card-title {
-    color: #f8f9fa;
+  @apply text-lg font-semibold text-gray-900 p-4;
 }
 
-.price-availability-box {
-    background-color: #343a40;
-    border: 1px solid #495057;
-    border-radius: 8px;
-    padding: 15px;
-    max-width: 250px;
-    margin: 20px auto;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    color: #f8f9fa;
+/* قیمت */
+.price {
+  @apply text-xl font-bold text-blue-600 p-4 pt-0;
 }
 
-.price-availability-box .price {
-    font-size: 2.5rem;
-    color: #0d6efd;
-    margin-bottom: 10px;
+/* دکمه‌ها */
+.btn-primary {
+  @apply bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition;
 }
 
-.price-availability-box .availability {
-    font-size: 1.1rem;
-    padding: 0.5em 0.8em;
+.btn-secondary {
+  @apply bg-gray-600 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 transition;
 }
 
-.card.bg-dark .form-control,
-.card.bg-dark .form-label,
-.card.bg-dark .text-danger,
-.card.bg-dark .form-text {
-    color: white !important;
+/* فرم‌ها */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  @apply w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
 }
 
-.card.bg-dark .form-control::placeholder {
-    color: rgba(255,255,255,0.7) !important;
-    opacity: 1;
+/* پیام‌های خطا و موفقیت */
+.alert-success {
+  @apply bg-green-100 text-green-800 border border-green-300 rounded p-4 mb-4;
 }
 
-.alert-danger {
-    color: white !important;
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
+.alert-error {
+  @apply bg-red-100 text-red-800 border border-red-300 rounded p-4 mb-4;
 }
 
-footer.bg-light {
-    background-color: #343a40 !important;
-    color: #adb5bd;
-    padding: 20px 0;
-    text-align: center;
+/* فوتر */
+footer {
+  @apply text-sm;
 }
-
-.pagination .page-item .page-link {
-    color: #0d6efd;
-    border-radius: 5px !important;
-    margin: 0 2px;
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-.pagination .page-item.disabled .page-link {
-    color: #6c757d;
-}
-```

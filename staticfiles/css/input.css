@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* استایل‌های اختصاصی را می‌توانی اینجا اضافه کنی یا در فایل جداگانه وارد کنی */
+@import "./custom.css";

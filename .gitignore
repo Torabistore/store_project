@@ -10,3 +10,4 @@ venv/
 
 # Media files
 media/
+node_modules

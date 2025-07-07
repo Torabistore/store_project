@@ -1,36 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}درباره ما{% endblock %}
+{% block title %}
+درباره ما | فروشگاه ترابی
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
-      <header class="text-center mb-5">
-        <h1 class="display-4 fw-bold text-light">درباره فروشگاه ترابی</h1>
-        <p class="lead text-light">آشنایی بیشتر با ما و اهدافمان</p>
-        <hr class="bg-light">
-      </header>
-
-      <div class="text-center">
-        <img src="{% static 'images/logo.jpg' %}" class="img-fluid rounded-circle mb-4" alt="لوگوی فروشگاه ترابی" style="width: 150px; height: 150px; object-fit: cover;">
-      </div>
-
-      <h3 class="mt-5 text-light">داستان ما</h3>
-      <p style="text-align: justify; line-height: 1.8; color: #f8f9fa;">
-          فروشگاه لوازم خانگی ترابی فعالیت خود را از سال <strong>۱۳۷۲</strong> شمسی با هدف ارائه بهترین و باکیفیت‌ترین لوازم خانگی به صورت عمده آغاز کرد. با تکیه بر تجربه چندین دهه، ما همواره در حال رشد و خدمت‌رسانی به همکاران و فروشندگان گرامی در سراسر کشور بوده‌ایم و اعتماد شما، بزرگترین سرمایه ما در این مسیر طولانی بوده است.
-      </p>
-
-      <h3 class="mt-5 text-light">ماموریت ما</h3>
-      <p style="text-align: justify; line-height: 1.8; color: #f8f9fa;">
-          ماموریت ما در فروشگاه ترابی، ایجاد یک رابطه پایدار و مبتنی بر اعتماد با مشتریان عمده ماست. ما معتقدیم که موفقیت ما در گرو موفقیت شماست و به همین دلیل، تمام تلاش خود را برای ارائه خدمات بهتر، پشتیبانی کامل و تامین به موقع کالا به کار می‌گیریم. ما به دنبال آن هستیم که به عنوان یک شریک تجاری قابل اعتماد در کنار شما باشیم.
-      </p>
-      
-      <div class="text-center mt-5">
-          <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-light btn-lg">مشاهده کاتالوگ محصولات</a>
-      </div>
+<div class="flex justify-center"> {# تغییر از row به flex justify-center #}
+    <div class="w-full md:w-2/3 lg:w-1/2 bg-white p-8 rounded-lg shadow-lg"> {# تغییر از col-md-8 mx-auto و اضافه کردن استایل کارت #}
+        <h2 class="text-2xl font-bold mb-6 text-center">درباره ما</h2> {# تغییر از h2 معمولی و اضافه کردن استایل #}
+        <p class="mb-4 text-gray-700 leading-relaxed">فروشگاه ترابی با سال‌ها تجربه در ارائه محصولات باکیفیت، متعهد به ارائه بهترین خدمات به مشتریان خود است. ما در تلاشیم تا تجربه خریدی آسان و لذت‌بخش را برای شما فراهم کنیم.</p> {# اضافه کردن استایل‌های Tailwind #}
+        <p class="mb-0 text-gray-700 leading-relaxed">هدف ما ارائه محصولات متنوع با قیمت‌های مناسب و پشتیبانی قوی است. اگر سوالی دارید، با ما از طریق صفحه <a href="{% url 'catalog:contact_page' %}" class="text-blue-600 hover:text-blue-800 font-semibold">تماس با ما</a> در ارتباط باشید.</p> {# اضافه کردن استایل‌های Tailwind #}
     </div>
-  </div>
 </div>
 {% endblock %}

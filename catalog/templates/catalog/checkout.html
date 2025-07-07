@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %} {# اضافه کنید اگر برای فرم‌ها نیاز دارید #}
+
+{% block title %}
+تکمیل سفارش | فروشگاه ترابی
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6"> {# container از base.html می‌آید #}
+    <h2 class="text-2xl font-bold mb-6 text-center">تکمیل سفارش</h2> {# اضافه کردن کلاس‌های Tailwind #}
+
+    <div class="flex flex-col lg:flex-row gap-6"> {# تغییر از row به flex و gap #}
+        <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg"> {# تغییر از col-md-8 mx-auto و اضافه کردن استایل کارت #}
+            <h3 class="text-xl font-semibold mb-4">خلاصه سبد خرید</h3> {# تغییر از card-title #}
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse"> {# تغییر از table table-bordered #}
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 border-b border-gray-300">محصول</th>
+                            <th class="py-3 px-6 border-b border-gray-300 text-center">تعداد</th>
+                            <th class="py-3 px-6 border-b border-gray-300 text-center">قیمت واحد</th>
+                            <th class="py-3 px-6 border-b border-gray-300 text-center">قیمت کل</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">
+                        {% for item in order.items.all %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 px-6 text-right whitespace-nowrap">{{ item.product.name }}</td>
+                            <td class="py-3 px-6 text-center">{{ item.quantity }}</td>
+                            <td class="py-3 px-6 text-center">{{ item.price|floatformat:"0" }} تومان</td>
+                            <td class="py-3 px-6 text-center">{{ item.total_price|floatformat:"0" }} تومان</td> {# فرض بر این است که item.total_price وجود دارد #}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-gray-100 text-gray-800 font-bold">
+                            <td colspan="3" class="py-3 px-6 text-right">مبلغ کل قابل پرداخت:</td>
+                            <td colspan="1" class="py-3 px-6 text-center">{{ order.total_price|floatformat:"0" }} تومان</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg"> {# تغییر از card #}
+            <h3 class="text-xl font-semibold mb-4">اطلاعات ارسال</h3> {# تغییر از card-title #}
+            <form method="post">
+                {% csrf_token %}
+                {# فرض می‌شود که شما یک فرم برای اطلاعات ارسال (ShippingForm) در views یا forms تعریف کرده‌اید #}
+                {# اگر فرم را پاس نمی‌دهید، باید فیلدها را دستی وارد کنید. اینجا فرض بر وجود فرم است #}
+                {% comment %}
+                اگر از فرم django استفاده می‌کنید:
+                {% for field in form %}
+                    <div class="mb-4">
+                        {{ field.label_tag }}
+                        {{ field|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}<div class="text-red-500 text-xs italic">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% else %}
+                برای مثال، فیلدهای دستی:
+                {% endcomment %}
+                <div class="mb-4">
+                    <label for="address" class="block text-gray-700 text-sm font-bold mb-2">آدرس کامل</label>
+                    <textarea name="address" id="address" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="phone_number" class="block text-gray-700 text-sm font-bold mb-2">شماره تماس</label>
+                    <input type="text" name="phone_number" id="phone_number" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                {# نمایش خطاهای غیر فیلدی در صورت وجود #}
+                {% if form.non_field_errors %}
+                    <div class="bg-red-100 text-red-800 border border-red-300 rounded p-3 mb-4">
+                        {% for error in form.non_field_errors %}<p class="text-sm">{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="btn-primary w-full">پرداخت و تکمیل</button> {# تغییر از btn btn-primary #}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

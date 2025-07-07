@@ -2,22 +2,25 @@
 {% block title %}پروفایل کاربری{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card bg-dark text-white shadow-lg">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">پروفایل کاربری</h2>
-                    <p class="text-white-50">سلام، {{ user.first_name }} {{ user.last_name }} عزیز!</p>
-                    <ul class="list-group list-group-flush bg-dark">
-                        <li class="list-group-item bg-dark text-white"><strong>شماره همراه:</strong> {{ user.mobile_number }}</li>
-                        <li class="list-group-item bg-dark text-white"><strong>نام کاربری (سیستمی):</strong> {{ user.username }}</li>
-                        <li class="list-group-item bg-dark text-white"><strong>تاریخ عضویت:</strong> {{ user.date_joined|date:"Y/m/d" }}</li>
-                    </ul>
-                    <div class="mt-4 text-center">
-                        <a href="{% url 'accounts:logout' %}" class="btn btn-danger">خروج از حساب</a>
-                    </div>
-                </div>
+<div class="flex justify-center"> {# تغییر از container و اضافه کردن flex justify-center #}
+    <div class="w-full md:w-2/3 lg:w-1/2 bg-white p-8 rounded-lg shadow-lg"> {# تغییر از card mb-4 و اضافه کردن استایل کارت #}
+        <h2 class="text-2xl font-bold mb-6 text-center">پروفایل کاربری</h2> {# تغییر از h2 معمولی و اضافه کردن استایل #}
+
+        {# تغییر از card-body به p-6 (یا همان p-8 که بالا دادیم) #}
+        <div class="p-0"> {# p-0 برای حذف پدینگ داخلی اگر از p-8 در div بیرونی استفاده کردید #}
+            <h5 class="text-xl font-semibold mb-4">سلام {{ user.first_name }} {{ user.last_name }} عزیز 🌟</h5> {# تغییر از card-title و اضافه کردن استایل #}
+            
+            {# تغییر از card-text و اضافه کردن استایل Tailwind #}
+            <p class="text-gray-700 mb-2"><strong>📱 شماره همراه:</strong> {{ user.mobile_number }}</p>
+            {# خط زیر را حذف کنید (زیرا user.username در مدل User سفارشی شما معنی ندارد) #}
+            {# <p class="text-gray-700 mb-2"><strong>👤 نام کاربری:</strong> {{ user.username }}</p> #}
+            {# خط زیر را حذف کنید (زیرا فیلد ایمیل در مدل User شما تعریف نشده است) #}
+            {# <p class="text-gray-700 mb-2"><strong>📧 ایمیل:</strong> {{ user.email }}</p> #}
+            <p class="text-gray-700 mb-4"><strong>🕒 تاریخ عضویت:</strong> {{ user.date_joined|date:"Y/m/d" }}</p>
+            
+            <div class="mt-6 flex flex-col sm:flex-row gap-4"> {# تغییر از mt-4 d-flex gap-2 #}
+                <a href="{% url 'accounts:order_list' %}" class="btn-primary inline-block text-center flex-1">مشاهده سفارش‌ها</a> {# تغییر از btn btn-outline-primary و اضافه کردن flex-1 #}
+                <a href="{% url 'accounts:logout' %}" class="btn-secondary inline-block text-center flex-1">خروج از حساب</a> {# تغییر از btn btn-danger و اضافه کردن flex-1 #}
             </div>
         </div>
     </div>

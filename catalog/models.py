@@ -1,82 +1,43 @@
 from django.db import models
-from django.urls import reverse
-from django.db.models import Index
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
-    name = models.CharField(max_length=200, db_index=True, verbose_name='نام دسته')
-    slug = models.SlugField(max_length=200, unique=True, verbose_name='اسلاگ')
-    description = models.TextField(blank=True, verbose_name='توضیحات دسته')
+    name = models.CharField(_('نام دسته‌بندی'), max_length=100)
+    slug = models.SlugField(_('اسلاگ'), max_length=100, unique=True)
 
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'دسته بندی'
-        verbose_name_plural = 'دسته بندی ها'
-
-    def get_absolute_url(self):
-        return reverse('catalog:category_products', args=[self.slug])
+        verbose_name = _('دسته‌بندی')
+        verbose_name_plural = _('دسته‌بندی‌ها')
 
     def __str__(self):
         return self.name
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, verbose_name='دسته بندی')
-    name = models.CharField(max_length=200, db_index=True, verbose_name='نام محصول')
-    slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='اسلاگ')
-    description = models.TextField(blank=True, verbose_name='توضیحات')
-    
-    price = models.DecimalField(
-        max_digits=10, 
-        decimal_places=0, 
-        blank=True,      
-        null=True,       
-        verbose_name='قیمت اصلی (تومان)'
-    ) 
+    name = models.CharField(_('نام محصول'), max_length=200)
+    slug = models.SlugField(_('اسلاگ'), max_length=200, unique=True)
+    description = models.TextField(_('توضیحات'), default='', blank=True)
+    specifications = models.TextField(_('مشخصات'), default='', blank=True)
+    price = models.DecimalField(_('قیمت'), max_digits=10, decimal_places=0, default=0)
+    available = models.BooleanField(_('موجود'), default=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('دسته‌بندی'))
+    created_at = models.DateTimeField(_('تاریخ ایجاد'), auto_now_add=True)
+    updated_at = models.DateTimeField(_('تاریخ به‌روزرسانی'), auto_now=True)
 
-    available = models.BooleanField(default=True, verbose_name='موجود است')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='تاریخ بروزرسانی')
-    specifications = models.TextField(blank=True, null=True, verbose_name="مشخصات محصول (هر خط یک مشخصه)")
-    
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'محصول'
-        verbose_name_plural = 'محصولات'
-        indexes = [
-            Index(fields=['id', 'slug']),
-        ]
-
-    def get_absolute_url(self):
-        return reverse('catalog:product_detail', args=[self.id])
+        verbose_name = _('محصول')
+        verbose_name_plural = _('محصولات')
 
     def __str__(self):
         return self.name
 
-# ProductVariant model for product options (like "rice plate")
-class ProductVariant(models.Model):
-    product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE, verbose_name='محصول اصلی')
-    name = models.CharField(max_length=100, verbose_name='نام گزینه (مثلاً بشقاب برنج)')
-    price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='قیمت این گزینه (تومان)')
-    sku = models.CharField(max_length=50, blank=True, verbose_name='کد کالا (SKU)')
-    available = models.BooleanField(default=True, verbose_name='موجود است')
-    
-    class Meta:
-        verbose_name = 'گزینه محصول'
-        verbose_name_plural = 'گزینه‌های محصول'
-        unique_together = ('product', 'name')
-
-    def __str__(self):
-        return f"{self.product.name} - {self.name}"
-
-# ProductImage model for product gallery images
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name='محصول')
-    image = models.ImageField(upload_to='products/gallery/%Y/%m/%d', verbose_name='تصویر')
-    is_main = models.BooleanField(default=False, verbose_name='تصویر اصلی') 
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name=_('محصول'))
+    image = models.ImageField(_('تصویر'), upload_to='products/')
+    is_main = models.BooleanField(_('تصویر اصلی'), default=False)
 
     class Meta:
-        verbose_name = 'تصویر محصول'
-        verbose_name_plural = 'تصاویر محصولات'
-        ordering = ['is_main', 'id'] 
+        verbose_name = _('تصویر محصول')
+        verbose_name_plural = _('تصاویر محصول')
 
     def __str__(self):
-        return f"تصویر {self.id} برای {self.product.name}"
+        return f"تصویر برای {self.product.name}"

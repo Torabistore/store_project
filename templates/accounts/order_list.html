@@ -2,20 +2,36 @@
 {% block title %}سفارشات من{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
-    <h2 class="text-3xl font-bold text-white mb-6">سفارشات من</h2>
+<div class="container mx-auto px-4 py-6"> {# container از base.html می‌آید #}
+    <h2 class="text-2xl font-bold my-4 text-center">🛒 سفارشات من</h2> {# تغییر از h2 معمولی و اضافه کردن استایل #}
+
     {% if orders %}
-        <ul class="space-y-4">
+        {# تغییر از row به grid و gap #}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for order in orders %}
-                <li class="p-4 bg-gray-800 rounded-lg shadow-md">
-                    <p>شماره سفارش: {{ order.id }}</p>
-                    <p>تاریخ ثبت: {{ order.created_at|date:"Y/m/d H:i" }}</p>
-                    <p>وضعیت: {{ order.status }}</p>
-                </li>
+                {# تغییر از col-* و mb-4 به mb-0 (اگر گپ در grid کافی باشد) #}
+                <div class="mb-0">
+                    {# تغییر از card shadow-sm h-100 به bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 h-full flex flex-col #}
+                    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+                        {# تغییر از card-body به p-6 #}
+                        {# تغییر از card-title به text-xl font-semibold mb-3 #}
+                        <h5 class="text-xl font-semibold mb-3">شماره سفارش: {{ order.id }}</h5>
+                        {# تغییر از card-text به text-gray-700 mb-2 #}
+                        <p class="text-gray-700 mb-2"><strong>تاریخ ثبت:</strong> {{ order.order_date|date:"Y/m/d H:i" }}</p>
+                        <p class="text-gray-700 mb-4"><strong>وضعیت:</strong> {{ order.get_status_display_fa }}</p>
+                        {# تغییر از btn btn-outline-primary mt-2 به btn-primary mt-auto #}
+                        <div class="mt-auto"> {# mt-auto برای هل دادن دکمه به پایین کارت #}
+                            <a href="{% url 'accounts:order_detail' order.id %}" class="btn-primary inline-block text-center">مشاهده جزئیات</a> {# inline-block و text-center برای دکمه لینک #}
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p class="text-gray-300">هیچ سفارشی ثبت نکرده‌اید.</p>
+        {# تغییر از alert alert-info role="alert" به bg-blue-100 text-blue-800 border border-blue-300 rounded p-4 text-center #}
+        <div class="bg-blue-100 text-blue-800 border border-blue-300 rounded p-4 text-center" role="alert">
+            📭 هنوز سفارشی ثبت نکرده‌اید.
+        </div>
     {% endif %}
 </div>
 {% endblock %}

@@ -1,99 +1,93 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}لیست محصولات{% endblock %}
+{% block title %}
+محصولات | فروشگاه ترابی
+{% endblock %}
 
 {% block content %}
-<div class="container py-5 text-light">
-  <header class="text-center mb-5">
-    <h1 class="display-4 fw-bold mb-3">محصولات فروشگاه ترابی</h1> 
-    <p class="lead text-secondary">جدیدترین و بهترین محصولات را اینجا بیابید.</p> 
-
-    {% if categories %}
-    <nav class="mt-4">
-        <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-light mx-1 mb-2 rounded-pill">همه محصولات</a> 
-        {% for category in categories %}
-            <a href="{% url 'catalog:category_products' category.slug %}" class="btn btn-outline-light mx-1 mb-2 rounded-pill">{{ category.name }}</a>
-        {% endfor %}
-    </nav>
-    {% endif %}
-  </header>
-
-  {% if messages %}
-      <div class="container mb-4">
-          <div class="row justify-content-center">
-              <div class="col-md-8">
-                  {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert"> 
-                          {{ message }}
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-                  {% endfor %}
-              </div>
-          </div>
-      </div>
-  {% endif %}
-
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    {% for product in page_obj %}
-    <div class="col">
-      <div class="card h-100 product-card border-0 shadow-lg bg-dark text-light">
-        <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="text-decoration-none text-light">
-            {% with main_image=product.images.first %}
-                {% if main_image and main_image.image %}
-                <img src="{{ main_image.image.url }}" class="card-img-top product-image" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
-                {% else %}
-                <img src="{% static 'images/placeholder.png' %}" class="card-img-top product-image" alt="تصویر موجود نیست" style="height: 250px; object-fit: cover;">
-                {% endif %}
-            {% endwith %}
-
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title fw-bold text-white text-truncate mb-2">{{ product.name }}</h5>
-                <p class="card-text text-light small mb-3" style="opacity: 0.8;">{{ product.description|truncatechars:100 }}</p>
-                <div class="d-flex justify-content-between align-items-center mt-auto">
-                    <span class="fs-5 fw-bold text-info">{{ product.price|floatformat:"0" }} تومان</span>
-                </div>
-            </div>
-        </a>
-        <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 text-center">
-            <a href="{% url 'catalog:product_detail' pk=product.pk %}" class="btn btn-outline-info w-100">مشاهده جزئیات</a>
-        </div>
-      </div>
+<div class="flex flex-col md:flex-row gap-6 mb-4">
+    <!-- دسته‌بندی‌ها -->
+    <div class="md:w-1/4 bg-white p-4 rounded shadow">
+        <h3 class="text-lg font-semibold mb-4">دسته‌بندی‌ها</h3>
+        <ul class="space-y-2">
+            <li>
+                <a href="{% url 'catalog:product_list' %}" class="block px-3 py-2 rounded hover:bg-gray-100">همه محصولات</a>
+            </li>
+            {% for cat in categories %}
+                <li>
+                    <a href="{% url 'catalog:category_products' cat.slug %}" class="block px-3 py-2 rounded hover:bg-gray-100">{{ cat.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
-    {% empty %}
-      <div class="col-12">
-        <div class="alert alert-warning text-center mt-4" role="alert">
-          متاسفانه هیچ محصولی یافت نشد.
-          <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary mt-2">بازگشت به لیست همه محصولات</a>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
 
-  {% if is_paginated %}
-  <nav aria-label="Page navigation" class="mt-5">
-    <ul class="pagination justify-content-center">
-      {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link bg-dark text-light border-light" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>
-      {% else %}
-        <li class="page-item disabled"><span class="page-link bg-dark text-muted border-secondary">قبلی</span></li>
-      {% endif %}
-
-      {% for i in paginator.page_range %}
-        {% if page_obj.number == i %}
-          <li class="page-item active"><span class="page-link bg-info text-dark">{{ i }}</span></li>
+    <!-- لیست محصولات -->
+    <div class="md:w-3/4">
+        {% if category %}
+            <h2 class="text-xl font-bold mb-4">محصولات در دسته‌بندی {{ category.name }}</h2>
         {% else %}
-          <li class="page-item"><a class="page-link bg-dark text-light border-light" href="?page={{ i }}">{{ i }}</a></li>
+            <h2 class="text-xl font-bold mb-4">همه محصولات</h2>
         {% endif %}
-      {% endfor %}
 
-      {% if page_obj.has_next %}
-        <li class="page-item"><a class="page-link bg-dark text-light border-light" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>
-      {% else %}
-        <li class="page-item disabled"><span class="page-link bg-dark text-muted border-secondary">بعدی</span></li>
-      {% endif %}
-    </ul>
-  </nav>
-  {% endif %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {% for product in products %}
+                <div class="bg-white rounded shadow hover:shadow-lg transition-all duration-300">
+                    {% if product.images.exists %}
+                        <img src="{{ product.images.first.image.url }}" class="w-full h-48 object-cover rounded-t" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" class="w-full h-48 object-cover rounded-t" alt="تصویر پیش‌فرض">
+                    {% endif %}
+                    <div class="p-4">
+                        <h5 class="text-lg font-semibold mb-2">{{ product.name }}</h5>
+                        <p class="text-gray-600 text-sm mb-2">{{ product.description|truncatechars:100 }}</p>
+                        <p class="text-lg font-bold text-blue-500 mb-4">{{ product.price|floatformat:"0" }} تومان</p>
+                        <a href="{% url 'catalog:product_detail' product.id %}" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">مشاهده جزئیات</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="bg-blue-100 text-blue-800 p-4 rounded shadow">
+                    متاسفانه هیچ محصولی یافت نشد.
+                    <a href="{% url 'catalog:product_list' %}" class="text-blue-500 hover:text-blue-700">بازگشت به لیست همه محصولات</a>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav class="my-4">
+                <ul class="flex justify-center space-x-4">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded">قبلی</span>
+                        </li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li>
+                                <span class="px-4 py-2 bg-blue-500 text-white rounded">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li>
+                                <a class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded">بعدی</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -1,78 +1,28 @@
-{% extends 'catalog/base.html' %}
-{% load humanize %}
+{% extends 'base.html' %}
 {% block title %}سفارشات من{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <header class="text-center mb-5">
-        <h1 class="display-4 fw-bold">سفارشات من</h1>
-        <p class="lead text-muted">تاریخچه سفارشات شما در فروشگاه ترابی</p>
-        <hr>
-    </header>
-
+<div class="container">
+    <h2 class="my-4">سفارشات من</h2>
     {% if orders %}
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="table-responsive">
-                <table class="table table-dark table-striped table-hover rounded overflow-hidden">
-                    <thead>
-                        <tr>
-                            <th scope="col">شماره سفارش</th>
-                            <th scope="col">تاریخ سفارش</th>
-                            <th scope="col">وضعیت</th>
-                            <th scope="col">مبلغ کل</th>
-                            <th scope="col">جزئیات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                        <tr>
-                            <th scope="row">{{ order.id }}</th>
-                            <td>{{ order.order_date|date:"Y/m/d H:i" }}</td>
-                            <td>
-                                {% if order.is_completed %}
-                                    <span class="badge bg-success">تکمیل شده</span>
-                                {% else %}
-                                    <span class="badge bg-warning text-dark">در انتظار</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ order.total_price|floatformat:"0"|intcomma }} تومان</td>
-                            <td>
-                                <button class="btn btn-sm btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#order-{{ order.id }}" aria-expanded="false" aria-controls="order-{{ order.id }}">
-                                    مشاهده
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="collapse" id="order-{{ order.id }}">
-                            <td colspan="5">
-                                <div class="p-3 bg-secondary rounded text-white">
-                                    <h5>آیتم‌های سفارش:</h5>
-                                    <ul class="list-group list-group-flush bg-secondary">
-                                        {% for item in order.items.all %}
-                                        <li class="list-group-item bg-secondary text-white d-flex justify-content-between align-items-center">
-                                            {{ item.product.name|default:"محصول حذف شده" }}
-                                            <span class="badge bg-dark rounded-pill">{{ item.quantity }} عدد</span>
-                                            <span class="badge bg-dark rounded-pill">{{ item.price|floatformat:"0"|intcomma }} تومان/واحد</span>
-                                        </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="row">
+            {% for order in orders %}
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                    <div class="card border-{{ order.status|status_color }}">
+                        <div class="card-body">
+                            <h5 class="card-title">سفارش شماره: {{ order.id }}</h5>
+                            <p class="card-text">تاریخ ثبت: {{ order.created_at|date:"Y/m/d H:i" }}</p>
+                            <p class="card-text">وضعیت: {{ order.get_status_display_fa }}</p>
+                            <a href="{% url 'accounts:order_detail' order.id %}" class="btn btn-outline-primary btn-sm mt-2">جزئیات</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    </div>
     {% else %}
-    <div class="alert alert-info text-center" role="alert">
-        شما تاکنون سفارشی ثبت نکرده‌اید.
-    </div>
+        <div class="alert alert-info" role="alert">
+            هیچ سفارشی ثبت نکرده‌اید.
+        </div>
     {% endif %}
-
-    <div class="text-center mt-5">
-        <a href="{% url 'accounts:profile' %}" class="btn btn-outline-light">بازگشت به پروفایل</a>
-    </div>
 </div>
 {% endblock %}

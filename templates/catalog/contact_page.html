@@ -1,84 +1,43 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load widget_tweaks %}
 
-{% block title %}تماس با ما{% endblock %}
+{% block title %}
+تماس با ما | فروشگاه ترابی
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <h1 class="text-center mb-4 text-light">تماس با ما</h1>
-
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-
-      <p class="lead text-center text-light">
-        برای هرگونه سوال، پیشنهاد یا انتقاد، می‌توانید از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
-      </p>
-
-      <ul class="list-group list-group-flush mb-4">
-        <li class="list-group-item bg-dark text-light d-flex align-items-center">
-          <i class="bi bi-geo-alt-fill me-2"></i>
-          <strong class="me-2">آدرس:</strong> کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex align-items-center">
-          <i class="bi bi-telephone-fill me-2"></i>
-          <strong class="me-2">تلفن ثابت:</strong> <p class="mb-0 ms-2" dir="ltr">034 - 32733888</p>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex align-items-center">
-          <i class="bi bi-phone-fill me-2"></i>
-          <strong class="me-2">تلفن همراه (واتس‌اپ):</strong> <p class="mb-0 ms-2" dir="ltr">0912 089 0108</p>
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex align-items-center">
-          <i class="bi bi-envelope-fill me-2"></i>
-          <strong class="me-2">ایمیل:</strong> info@torabistore.com
-        </li>
-        <li class="list-group-item bg-dark text-light d-flex align-items-center">
-          <i class="bi bi-clock-fill me-2"></i>
-          <strong class="me-2">ساعات کاری:</strong> شنبه تا پنجشنبه، 9 صبح تا 1 ظهر و بعد از ظهر از 4 تا 7 شب
-        </li>
-      </ul>
-
-      <h4 class="mb-3 text-center text-light">فرم تماس</h4>
-      <p class="text-center text-light">لطفاً فرم زیر را پر کنید تا در اسرع وقت با شما تماس بگیریم.</p>
-
-      {% if messages %}
-        <div class="container mb-4">
-          <div class="row justify-content-center">
-            <div class="col-md-12">
-              {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} text-center" role="alert">
-                  {{ message }}
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
+<div class="flex justify-center"> {# تغییر از row به flex justify-center #}
+    <div class="w-full md:w-2/3 lg:w-1/2 bg-white p-8 rounded-lg shadow-lg"> {# تغییر از col-md-8 mx-auto و اضافه کردن استایل کارت #}
+        <h2 class="text-2xl font-bold mb-6 text-center">تماس با ما</h2> {# تغییر از h2 و اضافه کردن استایل #}
+        <p class="mb-4 text-gray-700">برای ارتباط با ما می‌توانید از اطلاعات زیر استفاده کنید یا فرم تماس را پر کنید.</p>
+        <div class="contact-info mb-6 p-4 bg-gray-50 rounded-md border border-gray-200"> {# اضافه کردن استایل برای contact-info #}
+            <p class="mb-2"><strong>ایمیل:</strong> info@torabistore.com</p>
+            <p class="mb-2"><strong>تلفن:</strong> 021-12345678</p>
+            <p class="mb-0"><strong>آدرس:</strong> تهران، خیابان اصلی، پلاک 123</p>
         </div>
-      {% endif %}
-
-      <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-          <div class="mb-3">
-            <label for="{{ field.id_for_label }}" class="form-label text-light">{{ field.label }}</label>
-            {{ field|add_class:"form-control bg-dark text-light border-secondary" }}
-            {% if field.help_text %}<div class="form-text text-light">{{ field.help_text }}</div>{% endif %}
-            {% for error in field.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
-          </div>
-        {% endfor %}
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-        {% endif %}
-        <button type="submit" class="btn btn-outline-light w-100">ارسال پیام</button>
-      </form>
-
-      <h3 class="mt-4 text-center text-light">موقعیت ما روی نقشه</h3>
-      <div class="ratio ratio-16x9 mt-3 mb-4 rounded shadow">
-        <iframe src="https://maps.google.com/maps?q=30.30255,57.07440&hl=es&z=14&output=embed"
-                width="600" height="450" style="border:0;"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-4"> {# تغییر از mb-3 به mb-4 #}
+                    <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ field.label }}</label>
+                    {{ field|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <div class="text-red-500 text-xs italic mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+                <div class="bg-red-100 text-red-800 border border-red-300 rounded p-3 mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <button type="submit" class="btn-primary w-full">ارسال پیام</button>
+        </form>
     </div>
-  </div>
 </div>
 {% endblock %}
