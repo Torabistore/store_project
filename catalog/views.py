@@ -76,6 +76,24 @@ def cart_remove(request, item_id):
     messages.success(request, 'محصول از سبد خرید حذف شد.')
     return redirect('catalog:cart')
 
+def checkout_view(request):
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+
+    order = Order.objects.filter(user=request.user, status='pending').first()
+    if not order:
+        messages.error(request, "سبد خرید شما خالی است.")
+        return redirect('catalog:product_list')
+
+    if request.method == 'POST':
+        # اینجا می‌توانی منطق پرداخت یا ثبت سفارش نهایی را قرار دهی
+        messages.success(request, "سفارش شما ثبت شد.")
+        order.status = 'processing'  # یا هر وضعیت مناسب دیگر
+        order.save()
+        return redirect('catalog:homepage')
+
+    return render(request, 'catalog/checkout.html', {'order': order})
+
 def search_results(request):
     query = request.GET.get('q', '')
     products = Product.objects.filter(name__icontains=query, available=True).order_by('id')
