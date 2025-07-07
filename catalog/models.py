@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import mark_safe
+
 
 class Category(models.Model):
     name = models.CharField(_('نام دسته‌بندی'), max_length=100)
@@ -11,6 +13,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Product(models.Model):
     name = models.CharField(_('نام محصول'), max_length=200)
@@ -30,6 +33,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name=_('محصول'))
     image = models.ImageField(_('تصویر'), upload_to='products/')
@@ -41,3 +45,10 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"تصویر برای {self.product.name}"
+
+    def image_tag(self):
+        if self.image:
+            return mark_safe(f'<img src="{self.image.url}" width="100" />')
+        return "No Image"
+
+    image_tag.short_description = "پیش‌نمایش"  # ✅ اضافه کن برای نمایش در admin
