@@ -1,15 +1,12 @@
-# catalog/templatetags/price_filters.py
 from django import template
 
 register = template.Library()
 
-@register.filter
+@register.filter()
 def price_format(value):
-    """
-    فرمت عدد را به صورت 1.234.567 برمی‌گرداند
-    """
     try:
-        value = int(value)
-        return "{:,}".format(value).replace(",", ".")
+        value = float(value)
+        formatted = f"{value:,.0f}"
+        return f"{formatted} تومان"
     except (ValueError, TypeError):
-        return value
+        return "نامشخص"
