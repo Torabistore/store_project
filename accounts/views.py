@@ -1,4 +1,3 @@
-# accounts/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -8,13 +7,18 @@ from django.utils.encoding import force_bytes, force_str
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-# فرم‌ها و مدل‌ها
-from .forms import CustomUserCreationForm, PasswordResetForm, SetNewPasswordForm, LoginForm
+from .forms import (
+    CustomUserCreationForm,
+    PasswordResetForm,
+    SetNewPasswordForm,
+    LoginForm
+)
 from .models import User
 
 import kavenegar
 import random
 from django.conf import settings
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -23,12 +27,13 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, 'با موفقیت وارد شدید.')
-            return redirect('catalog:homepage')  # ارجاع به catalog:homepage
+            return redirect('catalog:homepage')
         else:
             messages.error(request, 'شماره موبایل یا رمز عبور اشتباه است.')
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -37,16 +42,19 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'ثبت‌نام با موفقیت انجام شد.')
-            return redirect('catalog:homepage')  # ارجاع به catalog:homepage
+            return redirect('catalog:homepage')
         else:
             messages.error(request, 'لطفاً اطلاعات را به درستی وارد کنید.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
-    return redirect('catalog:homepage')  # ارجاع به catalog:homepage
+    messages.info(request, 'شما از حساب خود خارج شدید.')
+    return redirect('catalog:homepage')
+
 
 def password_reset_request(request):
     if request.method == 'POST':
@@ -67,10 +75,10 @@ def password_reset_request(request):
                     print(f"DEBUG: OTP for {mobile_number}: {otp}")
 
                 except kavenegar.ApiException as e:
-                    messages.error(request, f'خطا در ارسال OTP (Kavenegar): {e}. لطفاً دوباره تلاش کنید.')
+                    messages.error(request, f'خطا در ارسال کد تأیید: {e}. لطفاً دوباره تلاش کنید.')
                     return render(request, 'accounts/password_reset_form.html', {'form': form})
                 except Exception as e:
-                    messages.error(request, f'خطا در ارسال OTP: {e}. لطفاً دوباره تلاش کنید.')
+                    messages.error(request, f'خطا در ارسال کد تأیید: {e}. لطفاً دوباره تلاش کنید.')
                     return render(request, 'accounts/password_reset_form.html', {'form': form})
 
                 request.session['otp'] = otp
@@ -78,23 +86,29 @@ def password_reset_request(request):
                 return redirect('accounts:verify_otp')
 
             except User.DoesNotExist:
-                messages.error(request, 'کاربری با این شماره موبایل وجود ندارد.')
+                messages.error(request, 'کاربری با این شماره موبایل یافت نشد.')
         else:
             messages.error(request, 'لطفاً شماره موبایل را به درستی وارد کنید.')
     else:
         form = PasswordResetForm()
     return render(request, 'accounts/password_reset_form.html', {'form': form})
 
+
 def verify_otp(request):
     if request.method == 'POST':
         otp = request.POST.get('otp')
         session_otp = request.session.get('otp')
         user_id = request.session.get('user_id')
+
         if otp == session_otp and user_id:
-            return redirect('accounts:set_new_password', uidb64=urlsafe_base64_encode(force_bytes(user_id)), token=default_token_generator.make_token(User.objects.get(id=user_id)))
+            uidb64 = urlsafe_base64_encode(force_bytes(user_id))
+            user = User.objects.get(id=user_id)
+            token = default_token_generator.make_token(user)
+            return redirect('accounts:set_new_password', uidb64=uidb64, token=token)
         else:
-            messages.error(request, 'کد OTP اشتباه است.')
+            messages.error(request, 'کد تأیید اشتباه است. لطفاً دوباره تلاش کنید.')
     return render(request, 'accounts/verify_otp.html')
+
 
 def set_new_password(request, uidb64, token):
     try:
@@ -108,7 +122,7 @@ def set_new_password(request, uidb64, token):
             form = SetNewPasswordForm(user, request.POST)
             if form.is_valid():
                 form.save()
-                messages.success(request, 'رمز عبور با موفقیت تغییر کرد.')
+                messages.success(request, 'رمز عبور با موفقیت تغییر یافت.')
                 return redirect('accounts:login')
             else:
                 messages.error(request, 'لطفاً اطلاعات را به درستی وارد کنید.')
@@ -116,15 +130,14 @@ def set_new_password(request, uidb64, token):
             form = SetNewPasswordForm(user)
         return render(request, 'accounts/set_new_password.html', {'form': form})
     else:
-        messages.error(request, 'لینک نامعتبر است.')
-        return redirect('accounts:password_reset')
+        messages.error(request, 'لینک تنظیم رمز عبور نامعتبر است.')
+        return redirect('accounts:password_reset_request')
 
-def homepage_view(request):
-    return render(request, 'catalog/homepage.html')  # اصلاح ارجاع به قالب catalog/homepage.html
 
 @login_required
 def profile_view(request):
     return render(request, 'accounts/profile.html')
+
 
 @login_required
 def order_list_view(request):

@@ -1,17 +1,15 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path
+from . import views
+
+app_name = 'catalog'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('', include('catalog.urls')),
-    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path('', views.homepage, name='homepage'),
+    path('products/', views.product_list, name='product_list'),
+    path('products/<int:product_id>/', views.product_detail, name='product_detail'),
+    path('about/', views.about_page, name='about_page'),
+    path('contact/', views.contact_page, name='contact_page'),
+    
+    # سبد خرید
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
 ]
-
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
