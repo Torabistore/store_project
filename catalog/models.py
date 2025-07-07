@@ -33,6 +33,10 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def formatted_price(self):
+        return f"{self.price:,.0f} تومان"
+    formatted_price.short_description = "قیمت (با فرمت)"
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, verbose_name=_('محصول'))
@@ -51,4 +55,4 @@ class ProductImage(models.Model):
             return mark_safe(f'<img src="{self.image.url}" width="100" />')
         return "No Image"
 
-    image_tag.short_description = "پیش‌نمایش"  # ✅ اضافه کن برای نمایش در admin
+    image_tag.short_description = "پیش‌نمایش"
