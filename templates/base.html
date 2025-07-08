@@ -34,6 +34,16 @@
       <ul class="flex flex-wrap gap-6 text-sm">
         <li><a href="{% url 'catalog:homepage' %}" class="hover:text-blue-300">خانه</a></li>
         <li><a href="{% url 'catalog:product_list' %}" class="hover:text-blue-300">محصولات</a></li>
+        <li>
+  <a href="{% url 'catalog:cart_view' %}" class="hover:text-yellow-300 flex items-center gap-1">
+    <i class="fa-solid fa-cart-shopping"></i> سبد خرید
+    {% if order and order.items.count > 0 %}
+      <span class="bg-red-500 text-white text-xs px-2 py-[1px] rounded-full">
+        {{ order.items.count }}
+      </span>
+    {% endif %}
+  </a>
+</li>
         <li><a href="{% url 'catalog:about_page' %}" class="hover:text-blue-300">درباره ما</a></li>
         <li><a href="{% url 'catalog:contact_page' %}" class="hover:text-blue-300">تماس با ما</a></li>
 
