@@ -33,71 +33,87 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {% for product in products %}
-                <div class="bg-white rounded shadow hover:shadow-lg transition-all duration-300">
-                    {% if product.images.all %}
-                        {% with main_image=product.images.first %}
-                            {% if main_image and main_image.image %}
-                                <img src="{{ main_image.image.url }}" class="w-full h-48 object-cover rounded-t" alt="{{ product.name }}">
-                            {% else %}
-                                <img src="{% static 'images/placeholder.png' %}" class="w-full h-48 object-cover rounded-t" alt="تصویر پیش‌فرض">
-                            {% endif %}
-                        {% endwith %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                {% with image=product.images.first %}
+                    {% if image and image.image %}
+                        <img src="{{ image.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
                     {% else %}
-                        <img src="{% static 'images/placeholder.png' %}" class="w-full h-48 object-cover rounded-t" alt="تصویر پیش‌فرض">
+                        <img src="{% static 'images/placeholder.png' %}" alt="تصویر پیش‌فرض" class="w-full h-64 object-cover">
                     {% endif %}
-                    <div class="p-4">
-                        <h5 class="text-lg font-semibold mb-2">{{ product.name }}</h5>
-                        <p class="text-gray-600 text-sm mb-2">{{ product.description|truncatechars:100 }}</p>
-                        <p class="text-lg font-bold text-blue-500 mb-4">{{ product.price|price_format }}</p>
-                        <a href="{% url 'catalog:product_detail' product.id %}" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 block text-center">مشاهده جزئیات</a>
+                {% endwith %}
+
+                <div class="p-6 space-y-3">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-tag text-green-500"></i>
+                        {{ product.name }}
+                    </h3>
+
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {{ product.description|truncatechars:80 }}
+                    </p>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-blue-600">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                            {{ product.price|price_format }} تومان
+                        </span>
+                        <span class="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                            ارسال رایگان <i class="fa-solid fa-truck-fast ml-1"></i>
+                        </span>
                     </div>
+
+                    <a href="{% url 'catalog:product_detail' product.id %}"
+                       class="w-full block mt-4 bg-yellow-500 text-white font-semibold py-2 px-4 rounded shadow hover:bg-yellow-600 hover:scale-105 transform transition duration-300 text-center">
+                        <i class="fa-solid fa-cart-plus mr-2"></i> مشاهده و خرید
+                    </a>
                 </div>
+            </div>
             {% empty %}
-                <div class="bg-blue-100 text-blue-800 p-4 rounded shadow">
+                <div class="col-span-full bg-blue-100 text-blue-800 p-4 rounded shadow text-center">
                     متاسفانه هیچ محصولی یافت نشد.
-                    <a href="{% url 'catalog:product_list' %}" class="text-blue-500 hover:text-blue-700">بازگشت به لیست همه محصولات</a>
+                    <a href="{% url 'catalog:product_list' %}" class="text-blue-500 hover:text-blue-700 font-semibold">بازگشت به لیست همه محصولات</a>
                 </div>
             {% endfor %}
         </div>
 
         {% if is_paginated %}
-            <nav class="my-4">
-                <ul class="flex justify-center space-x-4">
-                    {% if page_obj.has_previous %}
-                        <li>
-                            <a class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">قبلی</span>
-                        </li>
-                    {% endif %}
+        <nav class="my-6">
+            <ul class="flex justify-center space-x-2 text-sm">
+                {% if page_obj.has_previous %}
+                    <li>
+                        <a class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <span class="px-3 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">قبلی</span>
+                    </li>
+                {% endif %}
 
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
-                            {% if num == page_obj.number %}
-                                <li>
-                                    <span class="px-4 py-2 bg-blue-500 text-white rounded">{{ num }}</span>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300" href="?page={{ num }}">{{ num }}</a>
-                                </li>
-                            {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                        {% if num == page_obj.number %}
+                            <li>
+                                <span class="px-3 py-2 bg-blue-500 text-white rounded">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" href="?page={{ num }}">{{ num }}</a>
+                            </li>
                         {% endif %}
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <li>
-                            <a class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.next_page_number }}">بعدی</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">بعدی</span>
-                        </li>
                     {% endif %}
-                </ul>
-            </nav>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li>
+                        <a class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <span class="px-3 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">بعدی</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
         {% endif %}
     </div>
 </div>
