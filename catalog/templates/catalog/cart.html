@@ -15,7 +15,9 @@
             سبد خرید شما خالی است!
         </div>
         <div class="mt-6 text-center">
-            <a href="{% url 'catalog:product_list' %}" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition duration-300">ادامه خرید</a>
+            <a href="{% url 'catalog:product_list' %}" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition duration-300">
+                ادامه خرید
+            </a>
         </div>
     {% else %}
         <div class="overflow-x-auto bg-white rounded-lg shadow-lg p-6">
@@ -35,16 +37,22 @@
                         <td class="py-3 px-6 flex items-center gap-3 whitespace-nowrap">
                             {% with image=item.product.images.first %}
                                 {% if image and image.image %}
-                                    <img src="{{ image.image.url }}" class="w-10 h-10 object-cover rounded shadow" alt="{{ item.product.name }}">
+                                    <img src="{{ image.image.url }}" class="w-14 h-14 object-contain rounded shadow" alt="{{ item.product.name }}">
                                 {% else %}
-                                    <img src="{% static 'images/placeholder.jpg' %}" class="w-10 h-10 object-cover rounded shadow" alt="بدون تصویر">
+                                    <img src="{% static 'images/placeholder.jpg' %}" class="w-14 h-14 object-cover rounded shadow" alt="بدون تصویر">
                                 {% endif %}
                             {% endwith %}
                             {{ item.product.name }}
                         </td>
                         <td class="py-3 px-6 text-center">{{ item.quantity }}</td>
                         <td class="py-3 px-6 text-center">{{ item.price|price_format }} تومان</td>
-                        <td class="py-3 px-6 text-center">{{ item.total_price|price_format }} تومان</td>
+                        <td class="py-3 px-6 text-center">
+                            {% if item.total_price %}
+                                {{ item.total_price|price_format }} تومان
+                            {% else %}
+                                <span class="text-red-500">نامشخص</span>
+                            {% endif %}
+                        </td>
                         <td class="py-3 px-6 text-center">
                             <a href="{% url 'catalog:cart_remove' item.id %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 flex items-center gap-1">
                                 <i class="fa-solid fa-trash"></i> حذف
@@ -56,7 +64,13 @@
                 <tfoot>
                     <tr class="bg-gray-100 text-gray-800 font-bold">
                         <td colspan="3" class="py-3 px-6 text-right">مبلغ کل سبد خرید:</td>
-                        <td colspan="2" class="py-3 px-6 text-center">{{ order.total_price|price_format }} تومان</td>
+                        <td colspan="2" class="py-3 px-6 text-center">
+                            {% if order.total_price %}
+                                {{ order.total_price|price_format }} تومان
+                            {% else %}
+                                <span class="text-red-500">نامشخص</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 </tfoot>
             </table>
@@ -66,9 +80,10 @@
             <a href="{% url 'catalog:product_list' %}" class="bg-gray-300 text-gray-900 px-4 py-2 rounded shadow hover:bg-gray-400 transition duration-300 flex items-center gap-2">
                 <i class="fa-solid fa-arrow-left"></i> ادامه خرید
             </a>
-            <a href="{% url 'catalog:checkout' %}" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition duration-300 flex items-center gap-2">
-                <i class="fa-solid fa-credit-card"></i> تکمیل سفارش
-            </a>
+            <a href="{% url 'catalog:checkout' %}"
+   class="bg-green-600 text-white font-bold tracking-wide drop-shadow-sm px-4 py-2 rounded shadow hover:bg-green-700 transition duration-300 flex items-center gap-2">
+    <i class="fa-solid fa-credit-card"></i> تکمیل سفارش
+</a>
         </div>
     {% endif %}
 </div>
