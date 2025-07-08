@@ -37,18 +37,18 @@
                         <td class="py-3 px-6 flex items-center gap-3 whitespace-nowrap">
                             {% with image=item.product.images.first %}
                                 {% if image and image.image %}
-                                    <img src="{{ image.image.url }}" class="w-14 h-14 object-contain rounded shadow" alt="{{ item.product.name }}">
+                                    <img src="{{ image.image.url }}" class="hidden sm:block w-12 h-12 object-cover aspect-square rounded shadow" alt="{{ item.product.name }}">
                                 {% else %}
-                                    <img src="{% static 'images/placeholder.jpg' %}" class="w-14 h-14 object-cover rounded shadow" alt="بدون تصویر">
+                                    <img src="{% static 'images/placeholder.jpg' %}" class="hidden sm:block w-12 h-12 object-cover aspect-square rounded shadow" alt="بدون تصویر">
                                 {% endif %}
                             {% endwith %}
                             {{ item.product.name }}
                         </td>
-                        <td class="py-3 px-6 text-center">{{ item.quantity }}</td>
+                        <td class="py-3 px-6 text-center">{{ item.quantity|default:1 }}</td>
                         <td class="py-3 px-6 text-center">{{ item.price|price_format }} تومان</td>
                         <td class="py-3 px-6 text-center">
                             {% if item.total_price %}
-                                {{ item.total_price|price_format }} تومان
+                                {{ item.total_price|default:0|price_format }} تومان
                             {% else %}
                                 <span class="text-red-500">نامشخص</span>
                             {% endif %}
@@ -62,6 +62,12 @@
                     {% endfor %}
                 </tbody>
                 <tfoot>
+                    <tr>
+  <td colspan="5" class="py-3 px-6 text-center text-gray-500 text-sm">
+    برای ادامهٔ خرید یا نهایی‌سازی سفارش، از دکمه‌های پایین استفاده کنید 💡
+  </td>
+</tr>
+
                     <tr class="bg-gray-100 text-gray-800 font-bold">
                         <td colspan="3" class="py-3 px-6 text-right">مبلغ کل سبد خرید:</td>
                         <td colspan="2" class="py-3 px-6 text-center">
