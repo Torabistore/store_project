@@ -94,6 +94,24 @@ def search_results(request):
 
 def about_page(request):
     return render(request, 'catalog/about_page.html')
+def cart_increase(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__status='pending')
+    item.quantity += 1
+    item.save()
+    item.order.total_price = sum(i.price * i.quantity for i in item.order.items.all())
+    item.order.save()
+    return redirect('catalog:cart_view')
+
+def cart_decrease(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__status='pending')
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+        item.order.total_price = sum(i.price * i.quantity for i in item.order.items.all())
+        item.order.save()
+    else:
+        item.delete()
+    return redirect('catalog:cart_view')
 
 def contact_page(request):
     if request.method == 'POST':

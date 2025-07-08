@@ -23,4 +23,7 @@ urlpatterns = [
 
     # پرداخت
     path('checkout/', views.checkout_view, name='checkout'),
+    path('cart/increase/<int:item_id>/', views.cart_increase, name='cart_increase'),
+    path('cart/decrease/<int:item_id>/', views.cart_decrease, name='cart_decrease'),
+
 ]
