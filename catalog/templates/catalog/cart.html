@@ -15,30 +15,39 @@
             سبد خرید شما خالی است!
         </div>
         <div class="mt-6 text-center">
-            <a href="{% url 'catalog:product_list' %}" class="btn-primary">ادامه خرید</a>
+            <a href="{% url 'catalog:product_list' %}" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition duration-300">ادامه خرید</a>
         </div>
     {% else %}
         <div class="overflow-x-auto bg-white rounded-lg shadow-lg p-6">
             <table class="w-full text-right border-collapse">
                 <thead>
                     <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 border-b border-gray-300">محصول</th>
-                        <th class="py-3 px-6 border-b border-gray-300 text-center">تعداد</th>
-                        <th class="py-3 px-6 border-b border-gray-300 text-center">قیمت واحد</th>
-                        <th class="py-3 px-6 border-b border-gray-300 text-center">قیمت کل</th>
-                        <th class="py-3 px-6 border-b border-gray-300 text-center"></th>
+                        <th class="py-3 px-6 border-b">محصول</th>
+                        <th class="py-3 px-6 border-b text-center">تعداد</th>
+                        <th class="py-3 px-6 border-b text-center">قیمت واحد</th>
+                        <th class="py-3 px-6 border-b text-center">قیمت کل</th>
+                        <th class="py-3 px-6 border-b text-center"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
                     {% for item in order.items.all %}
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6 text-right whitespace-nowrap">{{ item.product.name }}</td>
+                        <td class="py-3 px-6 flex items-center gap-3 whitespace-nowrap">
+                            {% with image=item.product.images.first %}
+                                {% if image and image.image %}
+                                    <img src="{{ image.image.url }}" class="w-10 h-10 object-cover rounded shadow" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder.jpg' %}" class="w-10 h-10 object-cover rounded shadow" alt="بدون تصویر">
+                                {% endif %}
+                            {% endwith %}
+                            {{ item.product.name }}
+                        </td>
                         <td class="py-3 px-6 text-center">{{ item.quantity }}</td>
                         <td class="py-3 px-6 text-center">{{ item.price|price_format }} تومان</td>
                         <td class="py-3 px-6 text-center">{{ item.total_price|price_format }} تومان</td>
                         <td class="py-3 px-6 text-center">
-                            <a href="{% url 'catalog:cart_remove' item.id %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300">
-                                حذف
+                            <a href="{% url 'catalog:cart_remove' item.id %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 flex items-center gap-1">
+                                <i class="fa-solid fa-trash"></i> حذف
                             </a>
                         </td>
                     </tr>
@@ -53,9 +62,13 @@
             </table>
         </div>
 
-        <div class="mt-8 flex justify-between items-center">
-            <a href="{% url 'catalog:product_list' %}" class="btn-secondary">ادامه خرید</a>
-            <a href="{% url 'catalog:checkout' %}" class="btn-primary">تکمیل سفارش</a>
+        <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <a href="{% url 'catalog:product_list' %}" class="bg-gray-300 text-gray-900 px-4 py-2 rounded shadow hover:bg-gray-400 transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> ادامه خرید
+            </a>
+            <a href="{% url 'catalog:checkout' %}" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 transition duration-300 flex items-center gap-2">
+                <i class="fa-solid fa-credit-card"></i> تکمیل سفارش
+            </a>
         </div>
     {% endif %}
 </div>
