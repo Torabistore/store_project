@@ -1,4 +1,3 @@
-# catalog/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -7,7 +6,6 @@ from accounts.models import Order, OrderItem
 from .forms import ContactForm
 
 def homepage(request):
-    # این خط را به داخل تابع منتقل کنید و مطمئن شوید که recent_products به context ارسال می‌شود
     recent_products = Product.objects.filter(available=True).order_by('-created_at')[:4]
     return render(request, 'catalog/homepage.html', {'recent_products': recent_products})
 
@@ -45,10 +43,7 @@ def cart_add(request, product_id):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
     product = get_object_or_404(Product, id=product_id, available=True)
-
-    # پیدا کردن یا ایجاد سفارش با وضعیت 'pending'
     order, created = Order.objects.get_or_create(user=request.user, status='pending')
-
     order_item, created = OrderItem.objects.get_or_create(
         order=order,
         product=product,
@@ -58,12 +53,11 @@ def cart_add(request, product_id):
         order_item.quantity += 1
         order_item.save()
 
-    # محاسبه مجموع کل سفارش (می‌تونی به دلخواه خودت تغییر بدی)
     order.total_price = sum(item.price * item.quantity for item in order.items.all())
     order.save()
 
     messages.success(request, f'{product.name} به سبد خرید اضافه شد.')
-    return redirect('catalog:cart')
+    return redirect('catalog:cart_view')
 
 def cart_remove(request, item_id):
     if not request.user.is_authenticated:
@@ -74,7 +68,7 @@ def cart_remove(request, item_id):
     order.total_price = sum(item.price * item.quantity for item in order.items.all())
     order.save()
     messages.success(request, 'محصول از سبد خرید حذف شد.')
-    return redirect('catalog:cart')
+    return redirect('catalog:cart_view')
 
 def checkout_view(request):
     if not request.user.is_authenticated:
@@ -86,9 +80,8 @@ def checkout_view(request):
         return redirect('catalog:product_list')
 
     if request.method == 'POST':
-        # اینجا می‌توانی منطق پرداخت یا ثبت سفارش نهایی را قرار دهی
         messages.success(request, "سفارش شما ثبت شد.")
-        order.status = 'processing'  # یا هر وضعیت مناسب دیگر
+        order.status = 'processing'
         order.save()
         return redirect('catalog:homepage')
 
