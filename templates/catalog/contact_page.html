@@ -8,37 +8,57 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex justify-center"> {# تغییر از row به flex justify-center #}
-    <div class="w-full md:w-2/3 lg:w-1/2 bg-white p-8 rounded-lg shadow-lg"> {# تغییر از col-md-8 mx-auto و اضافه کردن استایل کارت #}
-        <h2 class="text-2xl font-bold mb-6 text-center">تماس با ما</h2> {# تغییر از h2 و اضافه کردن استایل #}
-        <p class="mb-4 text-gray-700">برای ارتباط با ما می‌توانید از اطلاعات زیر استفاده کنید یا فرم تماس را پر کنید.</p>
-        <div class="contact-info mb-6 p-4 bg-gray-50 rounded-md border border-gray-200"> {# اضافه کردن استایل برای contact-info #}
-            <p class="mb-2"><strong>ایمیل:</strong> info@torabistore.com</p>
-            <p class="mb-2"><strong>تلفن:</strong> 021-12345678</p>
-            <p class="mb-0"><strong>آدرس:</strong> تهران، خیابان اصلی، پلاک 123</p>
-        </div>
-        <form method="post" class="mt-4">
-            {% csrf_token %}
-            {% for field in form %}
-                <div class="mb-4"> {# تغییر از mb-3 به mb-4 #}
-                    <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ field.label }}</label>
-                    {{ field|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
-                    {% if field.errors %}
-                        {% for error in field.errors %}
-                            <div class="text-red-500 text-xs italic mt-1">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-            {% endfor %}
-            {% if form.non_field_errors %}
-                <div class="bg-red-100 text-red-800 border border-red-300 rounded p-3 mb-4">
-                    {% for error in form.non_field_errors %}
-                        <p class="text-sm">{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <button type="submit" class="btn-primary w-full">ارسال پیام</button>
-        </form>
+<div class="flex justify-center">
+  <div class="w-full md:w-2/3 lg:w-1/2 bg-white p-8 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2">
+      <i class="fa-solid fa-headset text-blue-600"></i> تماس با ما
+    </h2>
+
+    <p class="mb-4 text-gray-700 text-center">
+      برای ارتباط با ما می‌توانید از اطلاعات زیر استفاده کنید یا فرم زیر را پر کنید تا در کوتاه‌ترین زمان پاسخ دهیم.
+    </p>
+
+    <div class="mb-6 p-4 bg-gray-50 rounded-md border border-gray-200 space-y-3">
+      <p class="flex items-center gap-2 text-sm text-gray-800">
+        <i class="fa-solid fa-envelope text-blue-500"></i>
+        <strong>ایمیل:</strong> info@torabistore.com
+      </p>
+      <p class="flex items-center gap-2 text-sm text-gray-800">
+        <i class="fa-solid fa-phone text-green-500"></i>
+        <strong>تلفن:</strong> 034-32733888
+      </p>
+      <p class="flex items-center gap-2 text-sm text-gray-800">
+        <i class="fa-solid fa-location-dot text-red-500"></i>
+        <strong>آدرس:</strong> کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9
+      </p>
     </div>
+
+    <form method="post" class="mt-4 space-y-4">
+      {% csrf_token %}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ field.label }}
+          </label>
+          {{ field|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+          {% for error in field.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      {% if form.non_field_errors %}
+        <div class="bg-red-100 text-red-800 border border-red-300 rounded p-3">
+          {% for error in form.non_field_errors %}
+            <p class="text-sm">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 w-full flex justify-center items-center gap-2">
+        <i class="fa-solid fa-paper-plane"></i> ارسال پیام
+      </button>
+    </form>
+  </div>
 </div>
 {% endblock %}
