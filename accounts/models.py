@@ -1,8 +1,7 @@
-# accounts/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from catalog.models import Product # مطمئن شوید این ایمپورت وجود دارد
+from catalog.models import Product
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, mobile_number, password=None, **extra_fields):
@@ -17,10 +16,10 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
+        if not extra_fields.get('is_staff'):
+            raise ValueError(_('سوپروزر باید is_staff=True باشد.'))
+        if not extra_fields.get('is_superuser'):
+            raise ValueError(_('سوپروزر باید is_superuser=True باشد.'))
         return self.create_user(mobile_number, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -50,7 +49,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.mobile_number
 
 class Order(models.Model):
-    # تعریف وضعیت‌های سفارش
     STATUS_CHOICES = (
         ('pending', _('در انتظار پرداخت')),
         ('processing', _('در حال پردازش')),
@@ -61,9 +59,13 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', verbose_name=_('کاربر'))
     order_date = models.DateTimeField(_('تاریخ سفارش'), auto_now_add=True)
-    # is_completed = models.BooleanField(_('تکمیل شده'), default=False) # این خط قبلی را حذف کنید
     total_price = models.DecimalField(_('مبلغ کل'), max_digits=10, decimal_places=0, default=0)
-    status = models.CharField(_('وضعیت سفارش'), max_length=20, choices=STATUS_CHOICES, default='pending') # این خط جدید اضافه شده است
+    status = models.CharField(_('وضعیت سفارش'), max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    # فیلدهای اضافه‌شده برای پرداخت
+    address = models.TextField(_('آدرس ارسال'), blank=True, null=True)
+    phone_number = models.CharField(_('شماره تماس'), max_length=20, blank=True, null=True)
+    shipping_cost = models.IntegerField(_('هزینه ارسال'), default=0)
 
     class Meta:
         verbose_name = _("سفارش")
@@ -74,9 +76,8 @@ class Order(models.Model):
         return f"سفارش {self.id} توسط {self.user.mobile_number}"
 
     @property
-    def get_status_display_fa(self): # این متد برای نمایش وضعیت فارسی است
+    def get_status_display_fa(self):
         return dict(self.STATUS_CHOICES).get(self.status, self.status)
-
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', verbose_name=_('سفارش'), on_delete=models.CASCADE)
@@ -90,3 +91,7 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name if self.product else _('محصول حذف شده')}"
+
+    @property
+    def total_price(self):
+        return self.price * self.quantity

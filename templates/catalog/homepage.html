@@ -6,13 +6,15 @@
 
 {% block content %}
 
-<!-- بخش هرو -->
-<section class="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-28 px-6 md:px-12 text-center">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+<!-- 🔷 سکشن هرو با تصویر پس‌زمینه و لایه نیمه‌شفاف -->
+<section class="relative bg-cover bg-center text-white py-28 px-6 md:px-12 text-center"
+         style='background-image: url("{% static "images/hero-bg.jpg" %}");'>
+  <div class="absolute inset-0 bg-black/50 z-0"></div>
+  <div class="relative z-10 max-w-4xl mx-auto">
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight drop-shadow">
       کیفیت و اطمینان در خانه شما
     </h1>
-    <p class="text-lg md:text-2xl font-light mb-8">
+    <p class="text-lg md:text-2xl font-light mb-8 drop-shadow">
       ارائه برترین برندهای لوازم خانگی به صورت عمده از سال ۱۳۷۲
     </p>
     <div class="flex justify-center gap-6 flex-wrap">
@@ -26,7 +28,7 @@
   </div>
 </section>
 
-<!-- بخش محصولات جدید -->
+<!-- ✨ بخش محصولات جدید -->
 <section class="container mx-auto px-4 py-12">
   <h2 class="text-3xl font-bold text-gray-800 text-center mb-10 border-b-4 border-blue-600 inline-block pb-2">
     جدیدترین محصولات
