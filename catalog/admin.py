@@ -68,6 +68,12 @@ class ProductImageAdmin(admin.ModelAdmin):
 # 👕 مدیریت ویژگی‌های انتخابی محصول
 @admin.register(ProductVariant)
 class ProductVariantAdmin(admin.ModelAdmin):
-    list_display = ['product', 'color', 'size', 'stock', 'price']
+    list_display = ['product', 'color', 'size', 'stock_status', 'price']
     list_filter = ['product', 'color', 'size']
     search_fields = ['color', 'size']
+    fields = ['product', 'color', 'size', 'stock', 'price']
+
+    def stock_status(self, obj):
+        color = 'red' if obj.stock == 0 else 'green'
+        return format_html('<span style="color: {};">{}</span>', color, obj.stock)
+    stock_status.short_description = 'موجودی'

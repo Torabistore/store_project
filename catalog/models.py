@@ -25,6 +25,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('دسته‌بندی'))
     created_at = models.DateTimeField(_('تاریخ ایجاد'), auto_now_add=True)
     updated_at = models.DateTimeField(_('تاریخ به‌روزرسانی'), auto_now=True)
+    image_caption = models.CharField(_('توضیح زیر تصویر'), max_length=200, blank=True, default='')
 
     class Meta:
         verbose_name = _('محصول')
@@ -71,3 +72,5 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.color} / {self.size}"
+
+

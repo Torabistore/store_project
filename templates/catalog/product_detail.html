@@ -27,9 +27,11 @@
                  class="w-full h-auto rounded-xl object-cover transition-transform duration-300 hover:scale-105">
 
             <!-- 📌 توضیح زیر قاب تصویر -->
-            <p class="text-sm text-gray-500 mt-3 text-center">
-              مناسب برای برش انواع مواد غذایی | تیغه‌های فولاد ضدزنگ
-            </p>
+            {% if product.image_caption %}
+  <p class="text-sm text-gray-500 mt-3 text-center">
+    {{ product.image_caption }}
+  </p>
+{% endif %}
           </div>
         {% else %}
           <!-- جایگزین در صورت نبود تصویر -->
