@@ -57,9 +57,9 @@
                             </a>
                         </td>
                         <td class="py-3 px-6 text-center">{{ item.price|price_format }}</td>
-                        <td class="py-3 px-6 text-center">{{ item.quantity|mul:item.price|price_format }}</td>
-                        <td class="py-3 px-6 text-center">
-                            <a href="{% url 'catalog:cart_remove' forloop.counter0 %}"
+                    <td class="py-3 px-6 text-center">{{ item.total|price_format }}</td>
+             <td class="py-3 px-6 text-center">
+         <a href="{% url 'catalog:cart_remove' forloop.counter0 %}" 
                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 flex items-center gap-1">
                                 <i class="fa-solid fa-trash" title="حذف محصول"></i> حذف
                             </a>

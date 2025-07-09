@@ -69,11 +69,13 @@ def cart_view(request):
 
         total_price += price * item['quantity']
         items.append({
-            'product': product,
-            'variant': variant,
-            'quantity': item['quantity'],
-            'price': price
-        })
+    'product': product,
+    'variant': variant,
+    'quantity': item['quantity'],
+    'price': price,
+    'total': price * item['quantity']  # ✨ اضافه‌شده
+})
+
 
     return render(request, 'catalog/cart.html', {
         'items': items,
