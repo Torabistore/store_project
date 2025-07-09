@@ -132,4 +132,30 @@ def about_page(request):
 # پرداخت (نمونه)
 def checkout_view(request):
     cart = request.session.get('cart', [])
-    return render(request, 'catalog/checkout.html', {'cart': cart})
+    items = []
+    total_price = 0
+
+    for item in cart:
+        product = get_object_or_404(Product, id=item['product_id'])
+        variant = None
+        price = product.price
+
+        if item['variant_id']:
+            variant = get_object_or_404(ProductVariant, id=item['variant_id'], product=product)
+            price = variant.price
+
+        total = price * item['quantity']
+        total_price += total
+
+        items.append({
+            'product': product,
+            'variant': variant,
+            'quantity': item['quantity'],
+            'price': price,
+            'total': total
+        })
+
+    return render(request, 'catalog/checkout.html', {
+        'cart': items,
+        'total_price': total_price
+    })
