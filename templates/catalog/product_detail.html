@@ -17,10 +17,7 @@
         {% if image and image.image %}
           <div class="relative bg-gray-100 p-4 rounded-2xl border border-gray-300 w-full sm:w-3/4 lg:w-[400px] shadow-md">
             
-            <!-- 🔖 برچسب ویژگی -->
-            <span class="absolute top-2 left-2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full shadow">
-              سرویس ۹ پارچه
-            </span>
+            
 
             <!-- 🖼️ تصویر محصول با افکت Hover -->
             <img src="{{ image.image.url }}" alt="{{ product.name }}"
@@ -30,6 +27,7 @@
             {% if product.image_caption %}
   <p class="text-sm text-gray-500 mt-3 text-center">
     {{ product.image_caption }}
+    
   </p>
 {% endif %}
           </div>
