@@ -39,23 +39,29 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {% for product in recent_products %}
         <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 p-6 flex flex-col">
-          {% with main_image=product.images.first %}
-            {% if main_image and main_image.image %}
-              <img src="{{ main_image.image.url }}" alt="{{ product.name }}" class="w-full h-40 object-cover rounded-xl mb-4 border border-gray-200">
-            {% else %}
-              <img src="{% static 'images/placeholder.png' %}" alt="محصول بدون تصویر" class="w-full h-40 object-cover rounded-xl mb-4 border border-gray-200">
-            {% endif %}
-          {% endwith %}
-          <h3 class="text-xl font-semibold text-gray-900 mb-2 flex-grow">
-            {{ product.name }}
-          </h3>
-          <p class="text-indigo-600 font-bold text-lg mb-4">
-            {{ product.price|price_format }}
-          </p>
-          <a href="{% url 'catalog:product_detail' product.id %}" class="bg-blue-600 text-white py-2 rounded-full text-center hover:bg-blue-700 transition">
-            جزئیات محصول
-          </a>
-        </div>
+  {% with main_image=product.images.first %}
+    {% if main_image and main_image.image %}
+      <img src="{{ main_image.image.url }}" alt="{{ product.name }}"
+           class="w-full h-60 object-cover rounded-xl mb-6 border border-gray-200">
+    {% else %}
+      <img src="{% static 'images/placeholder.png' %}" alt="محصول بدون تصویر"
+           class="w-full h-60 object-cover rounded-xl mb-6 border border-gray-200">
+    {% endif %}
+  {% endwith %}
+  
+  <div class="mt-auto">
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+      {{ product.name }}
+    </h3>
+    <p class="text-indigo-600 font-bold text-lg mb-4">
+      {{ product.price|price_format }}
+    </p>
+    <a href="{% url 'catalog:product_detail' product.id %}"
+       class="bg-blue-600 text-white py-2 rounded-full text-center hover:bg-blue-700 transition block">
+      جزئیات محصول
+    </a>
+  </div>
+</div>
       {% endfor %}
     </div>
   {% else %}
