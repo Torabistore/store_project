@@ -1,129 +1,153 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from .models import Product, ProductVariant, Category
 from django.contrib import messages
-from django.core.paginator import Paginator
-from .models import Product, Category
-from accounts.models import Order, OrderItem
-from .forms import ContactForm
 
+# صفحه اصلی
 def homepage(request):
-    recent_products = Product.objects.filter(available=True).order_by('-created_at')[:4]
-    return render(request, 'catalog/homepage.html', {'recent_products': recent_products})
+    products = Product.objects.order_by('-created_at')[:8]
+    return render(request, 'catalog/homepage.html', {'recent_products': products})
 
+
+# لیست محصولات
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
-    products = Product.objects.filter(available=True).order_by('id')
+    products = Product.objects.filter(available=True)
+
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
 
-    paginator = Paginator(products, 9)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
     return render(request, 'catalog/product_list.html', {
         'category': category,
         'categories': categories,
-        'products': page_obj,
-        'page_obj': page_obj,
-        'is_paginated': page_obj.has_other_pages(),
+        'products': products
     })
 
+
+# جزئیات محصول
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk, available=True)
     return render(request, 'catalog/product_detail.html', {'product': product})
 
+
+# افزودن به سبد خرید
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    variant_id = request.POST.get("variant_id")
+    quantity = int(request.POST.get("quantity", 1))
+
+    if quantity < 1:
+        messages.warning(request, "تعداد وارد شده معتبر نیست.")
+        return redirect('catalog:product_detail', pk=product.id)
+
+    if variant_id:
+        variant = get_object_or_404(ProductVariant, id=variant_id, product=product)
+
+        if variant.stock == 0:
+            messages.error(request, "این ترکیب رنگ/سایز موجود نیست.")
+            return redirect('catalog:product_detail', pk=product.id)
+
+        # افزودن به سبد خرید (در session)
+        cart = request.session.get('cart', [])
+        cart.append({
+            'product_id': product.id,
+            'variant_id': variant.id,
+            'quantity': quantity
+        })
+        request.session['cart'] = cart
+        messages.success(request, "محصول با ویژگی انتخابی به سبد خرید افزوده شد.")
+    else:
+        # بدون انتخاب ویژگی
+        cart = request.session.get('cart', [])
+        cart.append({
+            'product_id': product.id,
+            'variant_id': None,
+            'quantity': quantity
+        })
+        request.session['cart'] = cart
+        messages.success(request, "محصول به سبد خرید افزوده شد.")
+
+    return redirect('catalog:cart_view')
+
+
+# نمای سبد خرید
 def cart_view(request):
-    if not request.user.is_authenticated:
-        return redirect('accounts:login')
-    order = Order.objects.filter(user=request.user, status='pending').first()
-    return render(request, 'catalog/cart.html', {'order': order})
+    cart = request.session.get('cart', [])
+    products = []
+    total_price = 0
 
-def cart_add(request, product_id):
-    if not request.user.is_authenticated:
-        return redirect('accounts:login')
-    product = get_object_or_404(Product, id=product_id, available=True)
-    order, created = Order.objects.get_or_create(user=request.user, status='pending')
-    order_item, created = OrderItem.objects.get_or_create(
-        order=order,
-        product=product,
-        defaults={'price': product.price}
-    )
-    if not created:
-        order_item.quantity += 1
-        order_item.save()
+    for item in cart:
+        product = get_object_or_404(Product, id=item['product_id'])
+        variant = None
+        if item['variant_id']:
+            variant = get_object_or_404(ProductVariant, id=item['variant_id'])
+            price = variant.price
+        else:
+            price = product.price
 
-    order.total_price = sum(item.price * item.quantity for item in order.items.all())
-    order.save()
+        total_price += price * item['quantity']
+        products.append({
+            'product': product,
+            'variant': variant,
+            'quantity': item['quantity'],
+            'price': price
+        })
 
-    messages.success(request, f'{product.name} به سبد خرید اضافه شد.')
-    return redirect('catalog:cart_view')
+    return render(request, 'catalog/cart.html', {
+        'items': products,
+        'total_price': total_price
+    })
 
+
+# حذف آیتم از سبد خرید
 def cart_remove(request, item_id):
-    if not request.user.is_authenticated:
-        return redirect('accounts:login')
-    order_item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__status='pending')
-    order = order_item.order
-    order_item.delete()
-    order.total_price = sum(item.price * item.quantity for item in order.items.all())
-    order.save()
-    messages.success(request, 'محصول از سبد خرید حذف شد.')
+    cart = request.session.get('cart', [])
+    if 0 <= item_id < len(cart):
+        del cart[item_id]
+        request.session['cart'] = cart
+        messages.success(request, "آیتم از سبد خرید حذف شد.")
     return redirect('catalog:cart_view')
 
-def checkout_view(request):
-    if not request.user.is_authenticated:
-        return redirect('accounts:login')
 
-    order = Order.objects.filter(user=request.user, status='pending').first()
-    if not order:
-        messages.error(request, "سبد خرید شما خالی است.")
-        return redirect('catalog:product_list')
+# افزایش تعداد
+def cart_increase(request, item_id):
+    cart = request.session.get('cart', [])
+    if 0 <= item_id < len(cart):
+        cart[item_id]['quantity'] += 1
+        request.session['cart'] = cart
+    return redirect('catalog:cart_view')
 
-    if request.method == 'POST':
-        messages.success(request, "سفارش شما ثبت شد.")
-        order.status = 'processing'
-        order.save()
-        return redirect('catalog:homepage')
 
-    return render(request, 'catalog/checkout.html', {'order': order})
+# کاهش تعداد
+def cart_decrease(request, item_id):
+    cart = request.session.get('cart', [])
+    if 0 <= item_id < len(cart) and cart[item_id]['quantity'] > 1:
+        cart[item_id]['quantity'] -= 1
+        request.session['cart'] = cart
+    return redirect('catalog:cart_view')
 
+
+# جستجو
 def search_results(request):
-    query = request.GET.get('q', '')
-    products = Product.objects.filter(name__icontains=query, available=True).order_by('id')
-    return render(request, 'catalog/search_results.html', {'products': products, 'query': query})
+    query = request.GET.get('q')
+    products = Product.objects.filter(name__icontains=query, available=True) if query else []
+    return render(request, 'catalog/search_results.html', {
+        'query': query,
+        'products': products
+    })
+
+
+# صفحه تماس و درباره ما
+def contact_page(request):
+    return render(request, 'catalog/contact.html')
 
 def about_page(request):
-    return render(request, 'catalog/about_page.html')
-def cart_increase(request, item_id):
-    item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__status='pending')
-    item.quantity += 1
-    item.save()
-    item.order.total_price = sum(i.price * i.quantity for i in item.order.items.all())
-    item.order.save()
-    return redirect('catalog:cart_view')
+    return render(request, 'catalog/about.html')
 
-def cart_decrease(request, item_id):
-    item = get_object_or_404(OrderItem, id=item_id, order__user=request.user, order__status='pending')
-    if item.quantity > 1:
-        item.quantity -= 1
-        item.save()
-        item.order.total_price = sum(i.price * i.quantity for i in item.order.items.all())
-        item.order.save()
-    else:
-        item.delete()
-    return redirect('catalog:cart_view')
 
-def contact_page(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            message_content = form.cleaned_data['message']
-            messages.success(request, 'پیام شما با موفقیت ارسال شد. از تماس شما سپاسگزاریم!')
-            return redirect('catalog:contact_page')
-        else:
-            messages.error(request, 'لطفاً اطلاعات را به درستی وارد کنید.')
-    else:
-        form = ContactForm()
-    return render(request, 'catalog/contact_page.html', {'form': form})
+# پرداخت (نمونه)
+def checkout_view(request):
+    cart = request.session.get('cart', [])
+    # در اینجا منطق ثبت سفارش و پرداخت رو پیاده‌سازی می‌کنی
+    return render(request, 'catalog/checkout.html', {'cart': cart})

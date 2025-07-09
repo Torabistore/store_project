@@ -20,7 +20,7 @@ class Product(models.Model):
     slug = models.SlugField(_('اسلاگ'), max_length=200, unique=True)
     description = models.TextField(_('توضیحات'), default='', blank=True)
     specifications = models.TextField(_('مشخصات'), default='', blank=True)
-    price = models.DecimalField(_('قیمت'), max_digits=10, decimal_places=0, default=0)
+    price = models.DecimalField(_('قیمت پایه'), max_digits=10, decimal_places=0, default=0)
     available = models.BooleanField(_('موجود'), default=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('دسته‌بندی'))
     created_at = models.DateTimeField(_('تاریخ ایجاد'), auto_now_add=True)
@@ -56,3 +56,18 @@ class ProductImage(models.Model):
         return "No Image"
 
     image_tag.short_description = "پیش‌نمایش"
+
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, related_name='variants', on_delete=models.CASCADE, verbose_name=_('محصول'))
+    color = models.CharField(_('رنگ'), max_length=50, blank=True)
+    size = models.CharField(_('سایز'), max_length=50, blank=True)
+    stock = models.PositiveIntegerField(_('موجودی'), default=0)
+    price = models.DecimalField(_('قیمت نهایی'), max_digits=10, decimal_places=0, default=0)
+
+    class Meta:
+        verbose_name = _('ویژگی محصول')
+        verbose_name_plural = _('ویژگی‌های محصول')
+
+    def __str__(self):
+        return f"{self.product.name} - {self.color} / {self.size}"
