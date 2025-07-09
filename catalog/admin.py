@@ -62,6 +62,7 @@ class ProductAdmin(admin.ModelAdmin):
     main_image_tag.short_description = 'تصویر اصلی'
 
 
+
 # 📷 مدیریت مستقیم تصاویر محصول
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
