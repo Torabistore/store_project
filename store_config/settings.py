@@ -67,8 +67,9 @@ DATABASES = {
 
 # احراز هویت
 AUTH_USER_MODEL = 'accounts.User'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'catalog:homepage'
+LOGOUT_REDIRECT_URL = 'catalog:homepage'
+
 
 # رمز عبور
 AUTH_PASSWORD_VALIDATORS = [

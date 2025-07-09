@@ -3,9 +3,10 @@ from . import views
 
 app_name = 'catalog'
 
-urlpatterns =[ 
+urlpatterns =[
     # 🏠 صفحه اصلی
-    path('', views.homepage, name='home'),
+    path('', views.homepage, name='homepage')
+
 
     # 📦 لیست محصولات و دسته‌ها
     path('products/', views.product_list, name='product_list'),
@@ -30,4 +31,5 @@ urlpatterns =[
 
     # 💳 صفحه پرداخت
     path('checkout/', views.checkout_view, name='checkout'),
+
 ]
