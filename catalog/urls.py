@@ -3,9 +3,9 @@ from . import views
 
 app_name = 'catalog'
 
-urlpatterns = [
+urlpatterns =[ 
     # 🏠 صفحه اصلی
-    path('', views.homepage, name='homepage'),
+    path('', views.homepage, name='home'),
 
     # 📦 لیست محصولات و دسته‌ها
     path('products/', views.product_list, name='product_list'),
