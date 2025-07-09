@@ -6,13 +6,12 @@
 
 {% block content %}
 
-<!-- 🔷 سکشن Hero با تصویر بک‌گراند و افکت تیره -->
 <section
-  class="relative bg-cover bg-center text-white h-[600px]"
-  style='background-image: url("{% static "images/hero-bg.jpg" %}");'
+  class="relative bg-cover bg-center bg-no-repeat text-white h-[100vh] min-h-[700px] px-6 md:px-12 text-center"
+  style="background-image: url('{% static 'images/hero-bg.jpg' %}');"
 >
-  <div class="absolute inset-0 bg-black/50 z-0"></div>
-  <div class="relative z-10 max-w-4xl mx-auto py-20 md:py-28">
+  <div class="absolute inset-0 bg-black/40 z-0"></div>
+  <div class="relative z-10 max-w-4xl mx-auto py-20 md:py-32">
     <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight drop-shadow">
       کیفیت و اطمینان در خانه شما
     </h1>
