@@ -26,7 +26,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(_('تاریخ ایجاد'), auto_now_add=True)
     updated_at = models.DateTimeField(_('تاریخ به‌روزرسانی'), auto_now=True)
     image_caption = models.CharField(_('توضیح زیر تصویر'), max_length=200, blank=True, default='')
-    piece_count = models.PositiveIntegerField(default=1, verbose_name='تعداد قطعات')
+    
 
 
     class Meta:

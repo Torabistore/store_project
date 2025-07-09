@@ -22,7 +22,7 @@ class ProductVariantInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'formatted_price', 'available', 'piece_count', 'category', 'created_at')
+    list_display = ('name', 'formatted_price', 'available', 'category', 'created_at')
     list_filter = ('available', 'category')
     search_fields = ('name', 'description')
     inlines = [ProductImageInline, ProductVariantInline]
