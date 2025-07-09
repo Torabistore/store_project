@@ -56,8 +56,8 @@
                                 <i class="fa-solid fa-plus"></i>
                             </a>
                         </td>
-                        <td class="py-3 px-6 text-center">{{ item.price|price_format }} تومان</td>
-                        <td class="py-3 px-6 text-center">{{ item.total_price|price_format }} تومان</td>
+                        <td class="py-3 px-6 text-center">{{ item.price|price_format }}</td>
+                        <td class="py-3 px-6 text-center">{{ item.total_price|price_format }}</td>
                         <td class="py-3 px-6 text-center">
                             <a href="{% url 'catalog:cart_remove' item.id %}"
                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 flex items-center gap-1">
@@ -78,7 +78,7 @@
                             <i class="fa-solid fa-coins text-yellow-500 mr-2"></i> مبلغ کل سبد خرید:
                         </td>
                         <td colspan="2" class="py-3 px-6 text-center text-green-700">
-                            {{ order.total_price|price_format }} تومان
+                            {{ order.total_price|price_format }}
                         </td>
                     </tr>
                     <tr class="bg-white text-gray-700">
