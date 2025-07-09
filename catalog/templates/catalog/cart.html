@@ -12,7 +12,7 @@
         <i class="fa-solid fa-basket-shopping text-green-600"></i> سبد خرید شما
     </h2>
 
-    {% if not order or not order.items.all %}
+    {% if not items %}
         <div class="bg-blue-100 text-blue-800 border border-blue-300 rounded p-4 text-center">
             سبد خرید شما خالی است!
         </div>
@@ -35,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm font-light">
-                    {% for item in order.items.all %}
+                    {% for item in items %}
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 flex items-center gap-3 whitespace-nowrap">
                             {% with image=item.product.images.first %}
@@ -48,18 +48,18 @@
                             {{ item.product.name }}
                         </td>
                         <td class="py-3 px-6 text-center flex justify-center items-center gap-2">
-                            <a href="{% url 'catalog:cart_decrease' item.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
+                            <a href="{% url 'catalog:cart_decrease' forloop.counter0 %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
                                 <i class="fa-solid fa-minus"></i>
                             </a>
                             <span class="px-2 font-bold">{{ item.quantity }}</span>
-                            <a href="{% url 'catalog:cart_increase' item.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
+                            <a href="{% url 'catalog:cart_increase' forloop.counter0 %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
                                 <i class="fa-solid fa-plus"></i>
                             </a>
                         </td>
                         <td class="py-3 px-6 text-center">{{ item.price|price_format }}</td>
-                        <td class="py-3 px-6 text-center">{{ item.total_price|price_format }}</td>
+                        <td class="py-3 px-6 text-center">{{ item.quantity|mul:item.price|price_format }}</td>
                         <td class="py-3 px-6 text-center">
-                            <a href="{% url 'catalog:cart_remove' item.id %}"
+                            <a href="{% url 'catalog:cart_remove' forloop.counter0 %}"
                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 flex items-center gap-1">
                                 <i class="fa-solid fa-trash" title="حذف محصول"></i> حذف
                             </a>
@@ -78,12 +78,12 @@
                             <i class="fa-solid fa-coins text-yellow-500 mr-2"></i> مبلغ کل سبد خرید:
                         </td>
                         <td colspan="2" class="py-3 px-6 text-center text-green-700">
-                            {{ order.total_price|price_format }}
+                            {{ total_price|price_format }}
                         </td>
                     </tr>
                     <tr class="bg-white text-gray-700">
                         <td colspan="3" class="py-3 px-6 text-right">مجموع تعداد اقلام:</td>
-                        <td colspan="2" class="py-3 px-6 text-center">{{ order.items.count }} عدد</td>
+                        <td colspan="2" class="py-3 px-6 text-center">{{ items|length }} عدد</td>
                     </tr>
                 </tfoot>
             </table>

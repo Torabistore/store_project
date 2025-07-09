@@ -41,53 +41,34 @@ def add_to_cart(request, product_id):
         messages.warning(request, "تعداد وارد شده معتبر نیست.")
         return redirect('catalog:product_detail', pk=product.id)
 
-    if variant_id:
-        variant = get_object_or_404(ProductVariant, id=variant_id, product=product)
-
-        if variant.stock == 0:
-            messages.error(request, "این ترکیب رنگ/سایز موجود نیست.")
-            return redirect('catalog:product_detail', pk=product.id)
-
-        # افزودن به سبد خرید (در session)
-        cart = request.session.get('cart', [])
-        cart.append({
-            'product_id': product.id,
-            'variant_id': variant.id,
-            'quantity': quantity
-        })
-        request.session['cart'] = cart
-        messages.success(request, "محصول با ویژگی انتخابی به سبد خرید افزوده شد.")
-    else:
-        # بدون انتخاب ویژگی
-        cart = request.session.get('cart', [])
-        cart.append({
-            'product_id': product.id,
-            'variant_id': None,
-            'quantity': quantity
-        })
-        request.session['cart'] = cart
-        messages.success(request, "محصول به سبد خرید افزوده شد.")
-
+    cart = request.session.get('cart', [])
+    cart.append({
+        'product_id': product.id,
+        'variant_id': int(variant_id) if variant_id else None,
+        'quantity': quantity
+    })
+    request.session['cart'] = cart
+    messages.success(request, "محصول به سبد خرید افزوده شد.")
     return redirect('catalog:cart_view')
 
 
 # نمای سبد خرید
 def cart_view(request):
     cart = request.session.get('cart', [])
-    products = []
+    items = []
     total_price = 0
 
     for item in cart:
         product = get_object_or_404(Product, id=item['product_id'])
         variant = None
+        price = product.price
+
         if item['variant_id']:
-            variant = get_object_or_404(ProductVariant, id=item['variant_id'])
+            variant = get_object_or_404(ProductVariant, id=item['variant_id'], product=product)
             price = variant.price
-        else:
-            price = product.price
 
         total_price += price * item['quantity']
-        products.append({
+        items.append({
             'product': product,
             'variant': variant,
             'quantity': item['quantity'],
@@ -95,7 +76,7 @@ def cart_view(request):
         })
 
     return render(request, 'catalog/cart.html', {
-        'items': products,
+        'items': items,
         'total_price': total_price
     })
 
@@ -149,5 +130,4 @@ def about_page(request):
 # پرداخت (نمونه)
 def checkout_view(request):
     cart = request.session.get('cart', [])
-    # در اینجا منطق ثبت سفارش و پرداخت رو پیاده‌سازی می‌کنی
     return render(request, 'catalog/checkout.html', {'cart': cart})
