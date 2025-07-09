@@ -40,9 +40,13 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name', 'description', 'specifications']
     inlines = [ProductImageInline, ProductVariantInline]
+
     fieldsets = (
         (None, {
-            'fields': ('category', 'name', 'slug', 'description', 'specifications', 'price', 'available')
+            'fields': (
+                'category', 'name', 'slug', 'description', 
+                'specifications', 'price', 'available', 'image_caption'
+            )
         }),
     )
 
