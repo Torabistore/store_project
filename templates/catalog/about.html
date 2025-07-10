@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load price_filters %}
-
-{% block title %}
-درباره ما | فروشگاه ترابی
-{% endblock %}
+{% block title %}درباره ما | فروشگاه ترابی{% endblock %}
 
 {% block content %}
-<div class="flex justify-center"> {# تغییر از row به flex justify-center #}
-    <div class="w-full md:w-2/3 lg:w-1/2 bg-white p-8 rounded-lg shadow-lg"> {# تغییر از col-md-8 mx-auto و اضافه کردن استایل کارت #}
-        <h2 class="text-2xl font-bold mb-6 text-center">درباره ما</h2> {# تغییر از h2 معمولی و اضافه کردن استایل #}
-        <p class="mb-4 text-gray-700 leading-relaxed">فروشگاه ترابی با سال‌ها تجربه در ارائه محصولات باکیفیت، متعهد به ارائه بهترین خدمات به مشتریان خود است. ما در تلاشیم تا تجربه خریدی آسان و لذت‌بخش را برای شما فراهم کنیم.</p> {# اضافه کردن استایل‌های Tailwind #}
-        <p class="mb-0 text-gray-700 leading-relaxed">هدف ما ارائه محصولات متنوع با قیمت‌های مناسب و پشتیبانی قوی است. اگر سوالی دارید، با ما از طریق صفحه <a href="{% url 'catalog:contact_page' %}" class="text-blue-600 hover:text-blue-800 font-semibold">تماس با ما</a> در ارتباط باشید.</p> {# اضافه کردن استایل‌های Tailwind #}
+<div class="container mx-auto px-4 py-10">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto space-y-6">
+    <h2 class="text-3xl font-bold text-green-700 text-center flex items-center justify-center gap-2">
+      <i class="fa-solid fa-building"></i> درباره فروشگاه ترابی
+    </h2>
+
+    <p class="text-gray-700 leading-relaxed text-sm">
+      فروشگاه ترابی فعالیت حرفه‌ای خود را از سال <strong>۱۳۷۲</strong> آغاز کرده و با بیش از <strong>۳۳ سال سابقه</strong>، به‌عنوان یکی از تأمین‌کنندگان معتبر <strong>لوازم خانگی ایرانی به صورت عمده</strong> در کشور شناخته می‌شود.
+    </p>
+
+    <p class="text-gray-700 leading-relaxed text-sm">
+      ما با افتخار صرفاً محصولات <strong>تولید داخل</strong> را عرضه می‌کنیم — باور داریم کیفیت ایرانی، قابل رقابت با بهترین‌های جهانی است و حمایت از تولید ملی، وظیفه‌ی صنفی و اخلاقی ماست.
+    </p>
+
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-sm text-gray-600">
+      <p>✅ بیش از سه دهه تجربه فروش عمده</p>
+      <p>✅ عرضه محصولات برندهای معتبر داخلی</p>
+      <p>✅ حمایت عملی از تولیدکنندگان ایرانی</p>
     </div>
+
+    <p class="text-gray-700 leading-relaxed text-sm">
+      برای اطلاعات بیشتر یا ارتباط مستقیم با ما، لطفاً از طریق صفحه <a href="{% url 'catalog:contact_page' %}" class="text-blue-600 hover:underline font-semibold">تماس با ما</a> اقدام کنید.
+    </p>
+
+    <div class="text-center pt-4">
+      <img src="{% static 'images/team.jpg' %}" alt="تیم فروشگاه ترابی" class="mx-auto rounded shadow w-full md:w-3/4 lg:w-1/2">
+      <p class="text-xs text-gray-500 mt-2">تیم فروشگاه ترابی در یک نگاه</p>
+    </div>
+  </div>
 </div>
 {% endblock %}
