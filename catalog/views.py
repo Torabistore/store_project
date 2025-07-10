@@ -1,14 +1,15 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, ProductVariant, Category
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from .models import Product, ProductVariant, Category, ContactMessage
+from .forms import ContactForm
 
-# صفحه اصلی
+# 🏠 صفحه اصلی
 def homepage(request):
     products = Product.objects.order_by('-created_at')[:8]
     return render(request, 'catalog/homepage.html', {'recent_products': products})
 
 
-# لیست محصولات
+# 🛍 لیست محصولات (با دسته‌بندی)
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -25,13 +26,13 @@ def product_list(request, category_slug=None):
     })
 
 
-# جزئیات محصول
+# 🔍 جزئیات محصول
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk, available=True)
     return render(request, 'catalog/product_detail.html', {'product': product})
 
 
-# افزودن به سبد خرید
+# ➕ افزودن به سبد خرید
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     variant_id = request.POST.get("variant_id")
@@ -52,7 +53,7 @@ def add_to_cart(request, product_id):
     return redirect('catalog:cart_view')
 
 
-# نمای سبد خرید
+# 🛒 نمایش سبد خرید
 def cart_view(request):
     cart = request.session.get('cart', [])
     items = []
@@ -67,15 +68,16 @@ def cart_view(request):
             variant = get_object_or_404(ProductVariant, id=item['variant_id'], product=product)
             price = variant.price
 
-        total_price += price * item['quantity']
-        items.append({
-    'product': product,
-    'variant': variant,
-    'quantity': item['quantity'],
-    'price': price,
-    'total': price * item['quantity']  # ✨ اضافه‌شده
-})
+        total = price * item['quantity']
+        total_price += total
 
+        items.append({
+            'product': product,
+            'variant': variant,
+            'quantity': item['quantity'],
+            'price': price,
+            'total': total
+        })
 
     return render(request, 'catalog/cart.html', {
         'items': items,
@@ -83,7 +85,7 @@ def cart_view(request):
     })
 
 
-# حذف آیتم از سبد خرید
+# ❌ حذف آیتم از سبد خرید
 def cart_remove(request, item_id):
     cart = request.session.get('cart', [])
     if 0 <= item_id < len(cart):
@@ -93,7 +95,7 @@ def cart_remove(request, item_id):
     return redirect('catalog:cart_view')
 
 
-# افزایش تعداد
+# ➕ افزایش تعداد
 def cart_increase(request, item_id):
     cart = request.session.get('cart', [])
     if 0 <= item_id < len(cart):
@@ -102,7 +104,7 @@ def cart_increase(request, item_id):
     return redirect('catalog:cart_view')
 
 
-# کاهش تعداد
+# ➖ کاهش تعداد
 def cart_decrease(request, item_id):
     cart = request.session.get('cart', [])
     if 0 <= item_id < len(cart) and cart[item_id]['quantity'] > 1:
@@ -111,7 +113,7 @@ def cart_decrease(request, item_id):
     return redirect('catalog:cart_view')
 
 
-# جستجو
+# 🔎 نمایش نتایج جستجو
 def search_results(request):
     query = request.GET.get('q')
     products = Product.objects.filter(name__icontains=query, available=True) if query else []
@@ -121,15 +123,26 @@ def search_results(request):
     })
 
 
-# صفحه تماس و درباره ما
+# 📞 تماس با ما — فرم تماس با ذخیره اطلاعات
 def contact_page(request):
-    return render(request, 'catalog/contact.html')
+    form = ContactForm()
 
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "✅ پیام شما با موفقیت ثبت شد.")
+            return redirect('catalog:contact_page')
+
+    return render(request, 'catalog/contact.html', {'form': form})
+
+
+# ℹ️ درباره ما
 def about_page(request):
     return render(request, 'catalog/about.html')
 
 
-# پرداخت (نمونه)
+# 💳 تکمیل سفارش
 def checkout_view(request):
     cart = request.session.get('cart', [])
     items = []
