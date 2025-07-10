@@ -12,16 +12,16 @@ class ContactForm(forms.ModelForm):
         }
         widgets = {
             'full_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'نام شما'
+                'class': 'form-control text-gray-800',
+                'placeholder': 'نام کامل شما'
             }),
             'phone_number': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '09123456789'
+                'class': 'form-control text-gray-800',
+                'placeholder': 'مثلاً 09123456789'
             }),
             'message': forms.Textarea(attrs={
-                'class': 'form-control',
+                'class': 'form-control text-gray-800',
                 'rows': 5,
-                'placeholder': 'پیام خود را بنویسید...'
-            }),
+                'placeholder': 'پیام خود را وارد کنید...'
+            })
         }
