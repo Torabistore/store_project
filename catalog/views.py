@@ -123,17 +123,15 @@ def search_results(request):
     })
 
 
-# 📞 تماس با ما — فرم تماس با ذخیره اطلاعات
+# 📞 تماس با ما — فرم تماس
 def contact_page(request):
     form = ContactForm()
-
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "✅ پیام شما با موفقیت ثبت شد.")
             return redirect('catalog:contact_page')
-
     return render(request, 'catalog/contact.html', {'form': form})
 
 
