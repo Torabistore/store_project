@@ -30,7 +30,7 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         ('اطلاعات محصول', {
             'fields': (
-                'name', 'slug', 'category', 'price', 'piece_count',
+                'name', 'slug', 'category', 'price',
                 'available', 'image_caption', 'description', 'specifications'
             )
         }),
