@@ -83,6 +83,7 @@ class ProductVariant(models.Model):
 class ContactMessage(models.Model):
     full_name = models.CharField(_('نام و نام خانوادگی'), max_length=100)
     phone_number = models.CharField(_('شماره تماس'), max_length=20)
+    email = models.EmailField(_('ایمیل'), max_length=255, blank=True)
     message = models.TextField(_('توضیحات'))
     created_at = models.DateTimeField(_('تاریخ ارسال'), auto_now_add=True)
 
