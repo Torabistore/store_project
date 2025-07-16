@@ -17,7 +17,7 @@ from .views import (
 app_name = 'catalog'
 
 urlpatterns = [
-    path('', views.homepage, name='homepage'),
+    path('', views.homepage_view, name='homepage'),
     path('products/', views.product_list_view, name='product_list'),
     path('search/', views.search_results, name='search_results'),
     path('contact/', views.contact_page_view, name='contact_page'),
