@@ -1,15 +1,16 @@
 import os
 from pathlib import Path
+from decouple import config
 from django.contrib.messages import constants as messages
-
 
 # 🗂 مسیر پایه پروژه
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 🔐 امنیت
-SECRET_KEY = 'django-insecure-حتماً-کلید-واقعی-اینجا-بذار'
-DEBUG = True
-ALLOWED_HOSTS = ['*']  # در تولیدی حتما دامنه واقعی بنویس
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-فقط-برای-تست')
+
+DEBUG = config('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 # 📦 اپلیکیشن‌ها
 INSTALLED_APPS = [
@@ -25,7 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'crispy_forms',
     'crispy_bootstrap4',
-    
+
     # اپ‌های خودت 👇
     'core',
     'catalog',
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 # ⚙️ میان‌افزارها
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -44,11 +46,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 🌐 آدرس‌های اصلی پروژه
+# 🌐 مسیرهای اصلی پروژه
 ROOT_URLCONF = 'store_config.urls'
 WSGI_APPLICATION = 'store_config.wsgi.application'
 
-# 🧩 قالب‌ها
+# 🎨 قالب‌ها
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,15 +75,11 @@ DATABASES = {
     }
 }
 
-# 👤 احراز هویت
-AUTH_USER_MODEL = 'users.CustomUser'  # 🔁 دوباره همین ولی اطمینان از ذخیره‌سازی جدید
+# 👤 احراز هویت سفارشی
+AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_REDIRECT_URL = 'catalog:profile'
 LOGOUT_REDIRECT_URL = 'catalog:homepage'
 LOGIN_URL = '/login/'
-
-
-
-
 
 # 🔐 سیاست رمز عبور
 AUTH_PASSWORD_VALIDATORS = [
@@ -112,10 +110,9 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
 }
 
-# 📬 ایمیل آزمایشی
+# 📬 ایمیل و پیامک
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@example.com'
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@example.com')
 
-SMS_API_KEY = 'rKBuFWS7Bde2D9Ig0v6YNzdHbiAHfzLJVN19axZKG2WhoTVO'
-from decouple import config
-SECRET_KEY = config('SECRET_KEY')
+SMS_API_KEY = config('SMS_API_KEY', default='API_KEY_TEST')
+SMS_SENDER_NUMBER = config('SMS_SENDER_NUMBER', default='0000000000')
