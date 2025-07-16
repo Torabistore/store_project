@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}تماس با ما | فروشگاه ترابی{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- 🟦 اطلاعات فروشگاه + نقشه -->
+    <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
+      <h2 class="text-2xl font-bold text-green-700 flex items-center gap-2">
+        <i class="fa-solid fa-store"></i> درباره فروشگاه ترابی
+      </h2>
+      <p class="text-gray-700 text-sm leading-relaxed">
+        فروشگاه ترابی فعالیت حرفه‌ای خود را از سال <strong>۱۳۷۲</strong> آغاز کرده و امروز پس از بیش از <strong>۳۳ سال سابقه</strong>، به‌عنوان یکی از تامین‌کنندگان اصلی لوازم خانگی به صورت <strong>عمده</strong> در کشور شناخته می‌شود.  
+        ما با افتخار تجربه، کیفیت، صداقت و پشتیبانی را به مشتریان سازمانی، فروشگاه‌ها و مراکز خرده‌فروشی ارائه می‌کنیم.
+      </p>
+
+      <div class="space-y-2 text-sm text-gray-800">
+        <p><strong>📍 آدرس:</strong> کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه ۹</p>
+        <p><strong>📞 تلفن فروش:</strong> 03432833888</p>
+        <p><strong>📞 پشتیبانی:</strong> 09120890108</p>
+        <p><strong>📧 ایمیل:</strong> info@torabistore.com</p>
+        <p><strong>🕒 ساعات کاری:</strong> شنبه تا پنج‌شنبه، ۹:۰۰ الی ۲۰:۰۰</p>
+        <p><strong>🌐 اینستاگرام:</strong> <a href="https://instagram.com/torabistore" target="_blank" class="text-blue-600 hover:underline">@torabistore</a></p>
+      </div>
+
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d372.68974822270786!2d57.07430846530867!3d30.302464465883396!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f021964fabab3b7%3A0xdf8af4dec411abbb!2z2qnZiNqG2Ycg2qnYp9ix2q_YsSDbuQ!5e0!3m2!1sen!2s!4v1752563493182!5m2!1sen!2s"
+        width="100%" 
+        height="280" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade" 
+        class="rounded-lg shadow-md">
+      </iframe>
+    </div>
+
+    <!-- 🟩 فرم تماس -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-envelope-circle-check"></i> فرم ارسال پیام
+      </h2>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="p-3 mb-4 rounded
+            {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-300
+            {% elif message.tags == 'error' %}bg-red-100 text-red-800 border border-red-300
+            {% else %}bg-blue-100 text-blue-800 border border-blue-300{% endif %}">
+            <p class="text-sm">{{ message }}</p>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate class="space-y-5">
+        {% csrf_token %}
+        {% for field in form %}
+          <div>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ field.label }}
+            </label>
+            {{ field|add_class:"w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800" }}
+            {% for error in field.errors %}
+              <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+          <div class="bg-red-100 border border-red-300 text-red-800 rounded p-3 text-sm">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <button type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-300 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> ارسال پیام
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

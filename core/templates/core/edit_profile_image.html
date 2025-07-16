@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}تغییر تصویر پروفایل{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">📷 تغییر تصویر پروفایل</h2>
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    {% csrf_token %}
+    <input type="file" name="profile_image" accept="image/*" class="block w-full text-sm text-gray-700 bg-gray-100 border rounded px-3 py-2">
+    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+      ذخیره تصویر جدید
+    </button>
+  </form>
+</div>
+{% endblock %}

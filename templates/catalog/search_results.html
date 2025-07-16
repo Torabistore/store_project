@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load price_filters %}
+
+{% block title %}نتایج جستجو | فروشگاه ترابی{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">نتایج جستجو برای: "{{ query }}"</h2>
+  {% if products %}
+    <div class="row">
+      {% for product in products %}
+        <div class="col-md-3 col-sm-6 mb-4">
+          <div class="card h-100 shadow-sm">
+            {% with main_image=product.images.first %}
+              {% if main_image and main_image.image %}
+                <img src="{{ main_image.image.url }}" class="card-img-top" alt="{{ product.name }}">
+              {% else %}
+                <img src="{% static 'images/no-image.png' %}" class="card-img-top" alt="بدون تصویر">
+              {% endif %}
+            {% endwith %}
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text text-success">{{ product.price|price_format }}</p>
+              <a href="{% url 'catalog:product_detail' product.id %}" class="btn btn-sm btn-info">مشاهده جزئیات</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-muted mt-4">هیچ محصولی با این عنوان یافت نشد.</p>
+  {% endif %}
+</div>
+{% endblock %}

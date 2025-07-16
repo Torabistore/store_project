@@ -1,0 +1,21 @@
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow text-right font-sans">
+  <h2 class="text-xl font-bold mb-6 text-indigo-700">داشبورد مالی</h2>
+
+  {% if debt %}
+    <p class="text-red-600 mb-4">بدهی فعلی: {{ debt.total_debt|intcomma }} تومان</p>
+  {% else %}
+    <p class="text-green-600 mb-4">شما بدهی ندارید</p>
+  {% endif %}
+
+  <h3 class="text-lg font-semibold mb-2 text-gray-700">ثبت پرداخت جدید:</h3>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name="amount" placeholder="مبلغ پرداختی" required class="mb-3 w-full border p-2 rounded">
+    <input type="text" name="reference_number" placeholder="شماره پیگیری" class="mb-3 w-full border p-2 rounded">
+    <textarea name="description" placeholder="توضیحات پرداخت" class="mb-3 w-full border p-2 rounded"></textarea>
+    <input type="file" name="payment_receipt" class="mb-3 w-full">
+    <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+      ثبت پرداخت
+    </button>
+  </form>
+</div>

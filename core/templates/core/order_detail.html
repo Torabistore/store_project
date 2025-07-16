@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}جزئیات سفارش #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">جزئیات سفارش #{{ order.id }}</h2>
+
+    <ul class="text-sm text-gray-700 space-y-2 mb-6">
+      <li><strong>تاریخ ثبت:</strong> {% if order.created_at %}{{ order.created_at|date:"Y/m/d H:i" }}{% else %}نامشخص{% endif %}</li>
+      <li><strong>وضعیت:</strong> {{ order.get_status_display_fa }}</li>
+      <li><strong>مبلغ کل:</strong> {{ order.total_price|price }} تومان</li>
+    </ul>
+
+    <div class="border-t pt-4">
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">محصولات سفارش‌داده‌شده:</h3>
+      {% if order.items and order.items.all %}
+        <ul class="space-y-3">
+          {% for item in order.items.all %}
+            <!-- The following classes are Tailwind CSS utilities:
+                 - 'flex': Enables flexbox layout.
+                 - 'justify-between': Distributes space between items.
+                 - 'items-center': Aligns items vertically at the center. -->
+            <li class="bg-gray-50 p-3 rounded border flex justify-between items-center text-sm">
+              <span>{{ item.product.title }}</span>
+              <span>{{ item.quantity }} عدد</span>
+        <p class="text-gray-500">محصولی برای این سفارش ثبت نشده است.</p>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-gray-500">هیچ محصولی ثبت نشده.</p>
+      {% endif %}
+    </div>
+
+    <div class="mt-6 text-center">
+      <a href="{% url 'core:order_list' %}" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        بازگشت به سفارشات
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

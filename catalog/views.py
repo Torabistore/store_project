@@ -1,172 +1,215 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Product, ProductVariant, Category, ContactMessage
-from .forms import ContactForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from catalog.models import Product, Category, PaymentRequest
+from core.models import Order, CartItem
+from core.forms import PaymentRequestForm
 
-# 🏠 صفحه اصلی
-def homepage(request):
-    products = Product.objects.order_by('-created_at')[:8]
-    return render(request, 'catalog/homepage.html', {'recent_products': products})
 
 
-# 🛍 لیست محصولات (با دسته‌بندی)
-def product_list(request, category_slug=None):
-    category = None
-    categories = Category.objects.all()
-    products = Product.objects.filter(available=True)
 
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=category)
-
-    return render(request, 'catalog/product_list.html', {
-        'category': category,
-        'categories': categories,
-        'products': products
+def homepage_view(request):
+    recent_products = Product.objects.filter(available=True).order_by('-created_at')[:8]
+    return render(request, 'catalog/homepage.html', {
+        'recent_products': recent_products
     })
 
 
-# 🔍 جزئیات محصول
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk, available=True)
+# ✅ لیست محصولات
+def product_list_view(request):
+    products = Product.objects.filter(available=True)
+    categories = Category.objects.all()
+    return render(request, 'catalog/product_list.html', {
+        'products': products,
+        'categories': categories,
+    })
+
+# ✅ جزئیات محصول
+def product_detail_view(request, id):
+    product = get_object_or_404(Product, id=id)
     return render(request, 'catalog/product_detail.html', {'product': product})
 
+# ✅ لیست سفارش‌های کاربر
+@login_required
+def order_list_view(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'core/order_list.html', {'orders': orders})
 
-# ➕ افزودن به سبد خرید
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    variant_id = request.POST.get("variant_id")
-    quantity = int(request.POST.get("quantity", 1))
+# ✅ جزئیات سفارش خاص
+@login_required
+def order_detail_view(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return render(request, 'catalog/order_detail.html', {'order': order})
 
-    if quantity < 1:
-        messages.warning(request, "تعداد وارد شده معتبر نیست.")
-        return redirect('catalog:product_detail', pk=product.id)
-
-    cart = request.session.get('cart', [])
-    cart.append({
-        'product_id': product.id,
-        'variant_id': int(variant_id) if variant_id else None,
-        'quantity': quantity
-    })
-    request.session['cart'] = cart
-    messages.success(request, "محصول به سبد خرید افزوده شد.")
-    return redirect('catalog:cart_view')
-
-
-# 🛒 نمایش سبد خرید
+# ✅ سبد خرید
+@login_required
 def cart_view(request):
-    cart = request.session.get('cart', [])
+    cart = request.session.get('cart', {})  # {'2': 1, '7': 3}
     items = []
     total_price = 0
 
-    for item in cart:
-        product = get_object_or_404(Product, id=item['product_id'])
-        variant = None
-        price = product.price
+    for product_id_str, quantity in cart.items():
+        try:
+            product = Product.objects.get(pk=int(product_id_str))
+            item_total = product.price * quantity
 
-        if item['variant_id']:
-            variant = get_object_or_404(ProductVariant, id=item['variant_id'], product=product)
-            price = variant.price
-
-        total = price * item['quantity']
-        total_price += total
-
-        items.append({
-            'product': product,
-            'variant': variant,
-            'quantity': item['quantity'],
-            'price': price,
-            'total': total
-        })
+            items.append({
+                'product': product,
+                'quantity': quantity,
+                'price': product.price,
+                'total': item_total
+            })
+            total_price += item_total
+        except Product.DoesNotExist:
+            continue
 
     return render(request, 'catalog/cart.html', {
         'items': items,
-        'total_price': total_price
+        'total_price': total_price,
     })
 
 
-# ❌ حذف آیتم از سبد خرید
-def cart_remove(request, item_id):
-    cart = request.session.get('cart', [])
-    if 0 <= item_id < len(cart):
-        del cart[item_id]
-        request.session['cart'] = cart
-        messages.success(request, "آیتم از سبد خرید حذف شد.")
-    return redirect('catalog:cart_view')
+# ✅ صفحه تماس
+def contact_page_view(request):
+    return render(request, 'catalog/contact.html')
 
-
-# ➕ افزایش تعداد
-def cart_increase(request, item_id):
-    cart = request.session.get('cart', [])
-    if 0 <= item_id < len(cart):
-        cart[item_id]['quantity'] += 1
-        request.session['cart'] = cart
-    return redirect('catalog:cart_view')
-
-
-# ➖ کاهش تعداد
-def cart_decrease(request, item_id):
-    cart = request.session.get('cart', [])
-    if 0 <= item_id < len(cart) and cart[item_id]['quantity'] > 1:
-        cart[item_id]['quantity'] -= 1
-        request.session['cart'] = cart
-    return redirect('catalog:cart_view')
-
-
-# 🔎 نمایش نتایج جستجو
+# ✅ جستجو
 def search_results(request):
     query = request.GET.get('q')
-    products = Product.objects.filter(name__icontains=query, available=True) if query else []
+    results = Product.objects.filter(name__icontains=query) if query else []
     return render(request, 'catalog/search_results.html', {
         'query': query,
-        'products': products
+        'results': results,
     })
 
-
-# 📞 تماس با ما — فرم تماس
-def contact_page(request):
-    form = ContactForm()
+# ✅ محصولات یک دسته‌بندی
+def category_products_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    categories = Category.objects.all()
+    return render(request, 'catalog/product_list.html', {
+        'products': products,
+        'categories': categories,
+        'active_category': category,
+    })
+# ✅ افزودن به سبد خرید (ایمن با بررسی نوع درخواست)
+def add_to_cart_view(request, product_id):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "✅ پیام شما با موفقیت ثبت شد.")
-            return redirect('catalog:contact_page')
-    return render(request, 'catalog/contact.html', {'form': form})
+        product = get_object_or_404(Product, pk=product_id)
+        try:
+            quantity = int(request.POST.get('quantity', 1))
+            if quantity < 1:
+                quantity = 1
+        except ValueError:
+            quantity = 1
+
+        cart = request.session.get('cart', {})
+        cart[str(product_id)] = cart.get(str(product_id), 0) + quantity
+        request.session['cart'] = cart
+
+        return redirect('catalog:cart_view')
+
+    # ⛔ اگر درخواست غیر POST بود، کاربر برگرده به جزئیات محصول
+    return redirect('catalog:product_detail', product_id)
+
+# ✅ ثبت درخواست پرداخت
+@login_required
+def submit_payment_view(request):
+    print("⚡ ویوی ثبت پرداخت صدا زده شد")
+
+    if request.method == 'POST':
+        print("📥 فرم ارسال شد با داده‌ها:", request.POST.dict())
+        print("📎 فایل فیش دریافتی:", request.FILES.get('receipt'))
+
+        amount = request.POST.get('amount')
+        receipt = request.FILES.get('receipt')
+
+        try:
+            amount_val = float(amount) if amount else None
+            if amount_val and amount_val >= 1000:
+                PaymentRequest.objects.create(
+                    user=request.user,
+                    amount=amount_val,
+                    payment_receipt=receipt,
+                    status='pending'
+                )
+                print("✅ پرداخت ثبت شد")
+                messages.success(request, "پرداخت شما با موفقیت ثبت شد ✅")
+            else:
+                messages.error(request, "مبلغ خیلی کم یا نامعتبر است ❌")
+        except Exception as e:
+            print("❌ خطا در ثبت پرداخت:", str(e))
+            messages.error(request, "خطا هنگام ذخیره پرداخت ❌")
+
+        return redirect('catalog:submit_payment')
+
+    return render(request, 'catalog/submit_payment.html')
+
+# ✅ تأیید پرداخت (توسط ادمین)
+@staff_member_required
+def approve_payment(request, pk):
+    req = get_object_or_404(PaymentRequest, pk=pk)
+    req.approve()
+    return redirect('/admin/catalog/paymentrequest/')
+
+# ✅ رد پرداخت (توسط ادمین)
+@staff_member_required
+def reject_payment(request, pk):
+    req = get_object_or_404(PaymentRequest, pk=pk)
+    req.status = 'rejected'
+    req.save()
+    return redirect('/admin/catalog/paymentrequest/')
+
+@login_required
+def cart_increase_view(request, product_id):
+    cart = request.session.get('cart', {})
+    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
+    request.session['cart'] = cart
+    return redirect('catalog:cart_view')
 
 
-# ℹ️ درباره ما
-def about_page(request):
-    return render(request, 'catalog/about.html')
+@login_required
+def cart_decrease_view(request, product_id):
+    cart = request.session.get('cart', {})
+    if str(product_id) in cart:
+        cart[str(product_id)] = max(cart[str(product_id)] - 1, 1)
+        request.session['cart'] = cart
+    return redirect('catalog:cart_view')
 
 
-# 💳 تکمیل سفارش
+@login_required
+def cart_remove_view(request, product_id):
+    cart = request.session.get('cart', {})
+    cart.pop(str(product_id), None)
+    request.session['cart'] = cart
+    return redirect('catalog:cart_view')
+
+
+@login_required
 def checkout_view(request):
-    cart = request.session.get('cart', [])
+    cart = request.session.get('cart', {})  # {'2': 1, '7': 3}
     items = []
     total_price = 0
 
-    for item in cart:
-        product = get_object_or_404(Product, id=item['product_id'])
-        variant = None
-        price = product.price
-
-        if item['variant_id']:
-            variant = get_object_or_404(ProductVariant, id=item['variant_id'], product=product)
-            price = variant.price
-
-        total = price * item['quantity']
-        total_price += total
-
-        items.append({
-            'product': product,
-            'variant': variant,
-            'quantity': item['quantity'],
-            'price': price,
-            'total': total
-        })
+    for product_id_str, quantity in cart.items():
+        try:
+            product = Product.objects.get(pk=int(product_id_str))
+            item_total = product.price * quantity
+            items.append({
+                'product': product,
+                'quantity': quantity,
+                'price': product.price,
+                'total': item_total
+            })
+            total_price += item_total
+        except Product.DoesNotExist:
+            continue
 
     return render(request, 'catalog/checkout.html', {
         'cart': items,
-        'total_price': total_price
+        'total_price': total_price,
     })
+
+
+

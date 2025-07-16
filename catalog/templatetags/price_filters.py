@@ -2,11 +2,11 @@ from django import template
 
 register = template.Library()
 
-@register.filter()
+@register.filter
 def price_format(value):
+    """فرمت‌دهی قیمت به صورت عدد با کاما و 'تومان'"""
     try:
-        value = float(value)
-        formatted = f"{value:,.0f}"
-        return f"{formatted} تومان"
+        value = int(value)
+        return f"{value:,} تومان"
     except (ValueError, TypeError):
-        return "نامشخص"
+        return "قیمت نامعتبر"

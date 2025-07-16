@@ -2,114 +2,118 @@
 {% load static %}
 {% load price_filters %}
 
-{% block title %}
-محصولات | فروشگاه ترابی
-{% endblock %}
+{% block title %}محصولات | فروشگاه ترابی{% endblock %}
 
 {% block content %}
-<div class="flex flex-col md:flex-row gap-6 mb-4">
-    <!-- دسته‌بندی‌ها -->
-    <div class="md:w-1/4 bg-white p-4 rounded shadow">
-        <h3 class="text-lg font-semibold mb-4">دسته‌بندی‌ها</h3>
-        <ul class="space-y-2">
-            <li>
-                <a href="{% url 'catalog:product_list' %}" class="block px-3 py-2 rounded hover:bg-gray-100">همه محصولات</a>
-            </li>
-            {% for cat in categories %}
-                <li>
-                    <a href="{% url 'catalog:category_products' cat.slug %}" class="block px-3 py-2 rounded hover:bg-gray-100">{{ cat.name }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<div class="container mx-auto px-4 py-10">
+  <div class="flex flex-col md:flex-row gap-8">
 
-    <!-- لیست محصولات -->
-    <div class="md:w-3/4">
-        {% if category %}
-            <h2 class="text-xl font-bold mb-4">محصولات در دسته‌بندی {{ category.name }}</h2>
-        {% else %}
-            <h2 class="text-xl font-bold mb-4">همه محصولات</h2>
-        {% endif %}
+    <!-- 🧭 دسته‌بندی‌ها -->
+    <aside class="md:w-1/4 bg-white p-6 rounded-lg shadow space-y-4">
+      <h3 class="text-lg font-bold text-gray-800">دسته‌بندی‌ها</h3>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li>
+          <a href="{% url 'catalog:product_list' %}" class="block px-3 py-2 rounded hover:bg-gray-100">همه محصولات</a>
+        </li>
+        {% for cat in categories %}
+          <li>
+            <a href="{% url 'catalog:category_products' cat.slug %}" class="block px-3 py-2 rounded hover:bg-gray-100">
+              {{ cat.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
 
+    <!-- 📦 لیست محصولات -->
+    <section class="md:w-3/4 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        {% if category %}محصولات در دسته‌بندی {{ category.name }}{% else %}همه محصولات{% endif %}
+      </h2>
+
+      {% if products %}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {% for product in products %}
-<div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-    {% with image=product.images.first %}
-        {% if image and image.image %}
-            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
-        {% else %}
-            <img src="{% static 'images/placeholder.png' %}" alt="تصویر پیش‌فرض" class="w-full h-64 object-cover">
-        {% endif %}
-    {% endwith %}
-
-    <div class="p-6 space-y-3">
-        <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <i class="fa-solid fa-tag text-green-500"></i>
-            {{ product.name }}
-        </h3>
-
-        <p class="text-gray-800 text-sm leading-relaxed">
-            {{ product.description|truncatechars:80 }}
-        </p>
-
-        <div class="flex items-center justify-between">
-            <span class="text-lg font-bold text-blue-600 flex items-center gap-1">
-                <i class="fa-solid fa-money-bill-wave"></i>
-                {{ product.price|price_format }} تومان
-            </span>
-            <span class="text-sm bg-red-100 text-red-700 px-2 py-1 rounded-full flex items-center gap-1">
-    <i class="fa-solid fa-truck"></i> ارسال با هزینه پستی
-</span>
-        </div>
-
-        <a href="{% url 'catalog:product_detail' product.id %}"
-   class="w-full block mt-4 bg-yellow-500 text-gray-900 font-semibold py-2 px-4 rounded shadow hover:bg-yellow-600 hover:scale-105 transform transition duration-300 text-center">
-    <i class="fa-solid fa-cart-plus mr-2"></i> مشاهده و خرید
-</a>
-    </div>
-</div>
-{% endfor %}
-        </div>
-
-        {% if is_paginated %}
-        <nav class="my-6">
-            <ul class="flex justify-center space-x-2 text-sm">
-                {% if page_obj.has_previous %}
-                    <li>
-                        <a class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
-                    </li>
+          {% for product in products %}
+            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden">
+              {% with image=product.images.first %}
+                {% if image and image.image %}
+                  <img src="{{ image.image.url }}" alt="{{ product.name }}"
+                       class="w-full h-64 object-cover border-b">
                 {% else %}
-                    <li>
-                        <span class="px-3 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">قبلی</span>
-                    </li>
+                  <img src="{% static 'images/placeholder.png' %}" alt="تصویر پیش‌فرض"
+                       class="w-full h-64 object-cover border-b">
                 {% endif %}
+              {% endwith %}
 
-                {% for num in page_obj.paginator.page_range %}
-                    {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
-                        {% if num == page_obj.number %}
-                            <li>
-                                <span class="px-3 py-2 bg-blue-500 text-white rounded">{{ num }}</span>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" href="?page={{ num }}">{{ num }}</a>
-                            </li>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
+              <div class="p-5 space-y-3">
+                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <i class="fa-solid fa-tag text-green-500"></i> {{ product.name }}
+                </h3>
 
-                {% if page_obj.has_next %}
-                    <li>
-                        <a class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400" href="?page={{ page_obj.next_page_number }}">بعدی</a>
-                    </li>
+                <p class="text-gray-700 text-sm leading-relaxed">
+                  {{ product.description|truncatechars:80 }}
+                </p>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-blue-600 font-bold text-lg flex items-center gap-1">
+                    <i class="fa-solid fa-money-bill-wave"></i> {{ product.price|price_format }} 
+                  </span>
+                  <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full flex items-center gap-1">
+                    <i class="fa-solid fa-truck"></i> ارسال با هزینه پستی
+                  </span>
+                </div>
+
+                <a href="{% url 'catalog:product_detail' product.id %}"
+                   class="block mt-4 bg-yellow-500 text-gray-900 font-semibold py-2 px-4 rounded text-center shadow hover:bg-yellow-600 hover:scale-105 transition">
+                  <i class="fa-solid fa-cart-plus mr-1"></i> مشاهده و خرید
+                </a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-gray-500 text-center mt-10 text-lg">هیچ محصولی یافت نشد.</p>
+      {% endif %}
+
+      <!-- 🔄 صفحه‌بندی -->
+      {% if is_paginated %}
+        <nav class="mt-8">
+          <ul class="flex justify-center items-center gap-2 text-sm">
+            {% if page_obj.has_previous %}
+              <li>
+                <a href="?page={{ page_obj.previous_page_number }}"
+                   class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400">قبلی</a>
+              </li>
+            {% else %}
+              <li>
+                <span class="px-3 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">قبلی</span>
+              </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                {% if num == page_obj.number %}
+                  <li><span class="px-3 py-2 bg-blue-600 text-white rounded">{{ num }}</span></li>
                 {% else %}
-                    <li>
-                        <span class="px-3 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">بعدی</span>
-                    </li>
+                  <li><a href="?page={{ num }}" class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">{{ num }}</a></li>
                 {% endif %}
-            </ul>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li>
+                <a href="?page={{ page_obj.next_page_number }}"
+                   class="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400">بعدی</a>
+              </li>
+            {% else %}
+              <li>
+                <span class="px-3 py-2 bg-gray-200 text-gray-400 rounded cursor-not-allowed">بعدی</span>
+              </li>
+            {% endif %}
+          </ul>
         </nav>
-        {% endif %}
-    </div>
+      {% endif %}
+    </section>
+  </div>
 </div>
 {% endblock %}

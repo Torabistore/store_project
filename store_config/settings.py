@@ -1,29 +1,39 @@
 import os
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
-# مسیر پایه پروژه
+
+# 🗂 مسیر پایه پروژه
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# امنیت
-SECRET_KEY = 'django-insecure-تغییر-دهید-به-کلید-واقعی'
+# 🔐 امنیت
+SECRET_KEY = 'django-insecure-حتماً-کلید-واقعی-اینجا-بذار'
 DEBUG = True
-ALLOWED_HOSTS = ['*']  # در حالت تولیدی حتما دامنه واقعی را وارد کنید
+ALLOWED_HOSTS = ['*']  # در تولیدی حتما دامنه واقعی بنویس
 
-# اپلیکیشن‌ها
+# 📦 اپلیکیشن‌ها
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'widget_tweaks',
+    'admin_interface',
+    'colorfield',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',  # مطمئن شوید که 'accounts' اینجا اضافه شده
+    'django.contrib.humanize',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    
+    # اپ‌های خودت 👇
+    'core',
     'catalog',
-    # پکیج‌های اضافه
-    'widget_tweaks',
+    'users',
 ]
 
-# میان‌افزار
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# ⚙️ میان‌افزارها
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -34,14 +44,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# آدرس اصلی پروژه
+# 🌐 آدرس‌های اصلی پروژه
 ROOT_URLCONF = 'store_config.urls'
+WSGI_APPLICATION = 'store_config.wsgi.application'
 
-# قالب‌ها
+# 🧩 قالب‌ها
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # مسیر قالب‌ها
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -54,10 +65,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI
-WSGI_APPLICATION = 'store_config.wsgi.application'
-
-# پایگاه‌داده (SQLite)
+# 🗃 پایگاه داده SQLite
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -65,43 +73,38 @@ DATABASES = {
     }
 }
 
-# احراز هویت
-AUTH_USER_MODEL = 'accounts.User'
-LOGIN_REDIRECT_URL = 'catalog:homepage'
+# 👤 احراز هویت
+AUTH_USER_MODEL = 'users.CustomUser'  # 🔁 دوباره همین ولی اطمینان از ذخیره‌سازی جدید
+LOGIN_REDIRECT_URL = 'catalog:profile'
 LOGOUT_REDIRECT_URL = 'catalog:homepage'
+LOGIN_URL = '/login/'
 
 
-# رمز عبور
+
+
+
+# 🔐 سیاست رمز عبور
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {'min_length': 6}
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 6}},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
 ]
 
-# تنظیمات بین‌المللی
+# 🌍 تنظیمات بین‌المللی
 LANGUAGE_CODE = 'fa'
 TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
 USE_TZ = True
 
-# فایل‌های استاتیک و مدیا
+# 🎨 فایل‌های استاتیک و مدیا
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# پیام‌ها (messages framework)
-from django.contrib.messages import constants as messages
+# ✉️ پیام‌ها
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     messages.SUCCESS: 'success',
@@ -109,7 +112,8 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
 }
 
-# ایمیل (برای بازیابی رمز - تنظیمات تستی)
+# 📬 ایمیل آزمایشی
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@example.com'
-KAVENEGAR_API_KEY = 'YOUR_ACTUAL_KAVENEGAR_API_KEY_HERE'
+
+SMS_API_KEY = 'rKBuFWS7Bde2D9Ig0v6YNzdHbiAHfzLJVN19axZKG2WhoTVO'

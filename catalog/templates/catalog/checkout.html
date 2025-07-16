@@ -8,9 +8,7 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-  <h2 class="text-2xl font-bold mb-6 text-center">
-    🧾 تکمیل سفارش
-  </h2>
+  <h2 class="text-2xl font-bold mb-6 text-center">🧾 تکمیل سفارش</h2>
 
   <div class="flex flex-col lg:flex-row gap-6">
     <!-- خلاصه سبد خرید -->
@@ -44,45 +42,45 @@
         </tfoot>
       </table>
       {% else %}
-        <div class="bg-blue-50 text-blue-600 border border-blue-200 rounded p-4 text-center mt-2">
-          سبد خرید شما خالی است!
-        </div>
+      <div class="bg-blue-50 text-blue-600 border border-blue-200 rounded p-4 text-center mt-2">
+        سبد خرید شما خالی است!
+      </div>
       {% endif %}
     </div>
 
     <!-- فرم اطلاعات ارسال -->
     <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
-      <h3 class="text-xl font-semibold mb-4">اطلاعات ارسال</h3>
-      <form method="post">
+      <h3 class="text-xl font-semibold mb-4">📍 اطلاعات ارسال سفارش</h3>
+      <form method="post" action="/checkout/submit/">
         {% csrf_token %}
 
         <div class="mb-4">
           <label for="full_name" class="block text-gray-700 font-bold mb-1">نام و نام خانوادگی</label>
-          <input type="text" name="full_name" id="full_name" required
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" name="full_name" id="full_name" required placeholder="مثال: علی رضایی"
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:outline-none">
         </div>
 
         <div class="mb-4">
           <label for="phone_number" class="block text-gray-700 font-bold mb-1">شماره تماس</label>
-          <input type="text" name="phone_number" id="phone_number" required
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" name="phone_number" id="phone_number" required placeholder="مثال: 09123456789" pattern="\d{10}"
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:outline-none">
         </div>
 
         <div class="mb-4">
           <label for="address" class="block text-gray-700 font-bold mb-1">آدرس کامل</label>
+          <small class="text-gray-500 block mb-2">مثال: تهران، خیابان آزادی، کوچه ۱۲، پلاک ۳۴، واحد ۲</small>
           <textarea name="address" id="address" rows="4" required
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:outline-none"></textarea>
         </div>
 
         <div class="mb-4">
           <label for="postal_code" class="block text-gray-700 font-bold mb-1">کد پستی</label>
-          <input type="text" name="postal_code" id="postal_code"
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" name="postal_code" id="postal_code" required placeholder="مثال: 1234567890" pattern="\d{10}"
+            class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:outline-none">
         </div>
 
-        <button type="submit"
-          class="w-full bg-green-600 text-white font-bold py-2 rounded shadow hover:bg-green-700 hover:scale-[1.02] transition duration-300">
-          پرداخت و تکمیل سفارش
+        <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">
+          پرداخت و ثبت سفارش
         </button>
       </form>
     </div>

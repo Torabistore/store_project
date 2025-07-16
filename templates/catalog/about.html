@@ -1,44 +1,0 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}درباره ما | فروشگاه ترابی{% endblock %}
-
-{% block content %}
-<div class="container mx-auto px-4 py-10">
-  <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto space-y-6">
-    <h2 class="text-3xl font-bold text-green-700 text-center flex items-center justify-center gap-2">
-      <i class="fa-solid fa-building"></i> درباره فروشگاه ترابی
-    </h2>
-
-    <p class="text-gray-700 leading-relaxed text-sm">
-      فروشگاه ترابی فعالیت حرفه‌ای خود را از سال <strong>۱۳۷۲</strong> آغاز کرده و با بیش از <strong>۳۳ سال سابقه</strong>، به‌عنوان یکی از تأمین‌کنندگان معتبر <strong>لوازم خانگی ایرانی به صورت عمده</strong> در کشور شناخته می‌شود.
-    </p>
-
-    <p class="text-gray-700 leading-relaxed text-sm">
-      ما با افتخار صرفاً محصولات <strong>تولید داخل</strong> را عرضه می‌کنیم — باور داریم کیفیت ایرانی، قابل رقابت با بهترین‌های جهانی است و حمایت از تولید ملی، وظیفه‌ی صنفی و اخلاقی ماست.
-    </p>
-
-    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-sm text-gray-600">
-      <p>✅ بیش از سه دهه تجربه فروش عمده</p>
-      <p>✅ عرضه محصولات برندهای معتبر داخلی</p>
-      <p>✅ حمایت عملی از تولیدکنندگان ایرانی</p>
-    </div>
-
-    <p class="text-gray-700 leading-relaxed text-sm">
-      برای اطلاعات بیشتر یا ارتباط مستقیم با ما، لطفاً از طریق صفحه <a href="{% url 'catalog:contact_page' %}" class="text-blue-600 hover:underline font-semibold">تماس با ما</a> اقدام کنید.
-    </p>
-
-    <!-- 🖼 تصاویر جدید اضافه‌شده -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-      <div>
-        <img src="{% static 'images/store_view_final_1.jpg' %}" alt="نمای فروشگاه ترابی" class="rounded shadow w-full">
-        <p class="text-xs text-gray-500 mt-2 text-center">نمای دقیق و حرفه‌ای از فروشگاه ترابی</p>
-      </div>
-      <div>
-        <img src="{% static 'images/store_view_final_2.jpg' %}" alt="اصلاحات تصویری فروشگاه ترابی" class="rounded shadow w-full">
-        <p class="text-xs text-gray-500 mt-2 text-center">برند ترابی، واقعی و شفاف در یک قاب</p>
-      </div>
-    </div>
-
-  </div>
-</div>
-{% endblock %}

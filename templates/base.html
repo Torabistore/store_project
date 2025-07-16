@@ -1,93 +1,99 @@
 {% load static %}
 {% load price_filters %}
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}فروشگاه ترابی{% endblock %}</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- فایل CSS خروجی Tailwind -->
+  <!-- ✅ آیکون سایت (favicon) -->
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
+
+  <!-- 📦 Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- 🎨 استایل خروجی Tailwind -->
   <link href="{% static 'css/output.css' %}" rel="stylesheet" />
 
-  <!-- فونت فارسی Vazirmatn از گوگل -->
+  <!-- 🖋 فونت فارسی Vazirmatn -->
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
     body {
       font-family: 'Vazirmatn', sans-serif;
-      background-color: #f3f4f6; /* خاکستری روشن */
-      color: #111827; /* رنگ متن تیره */
+      background-color: #f3f4f6;
+      color: #111827;
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- ناوبری بالا -->
+  <!-- 🔷 ناوبری -->
   <nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="{% url 'catalog:homepage' %}" class="text-xl font-bold hover:text-blue-400">
-        فروشگاه ترابی
-      </a>
+      <a href="{% url 'core:homepage' %}" class="text-xl font-bold hover:text-blue-400">فروشگاه ترابی</a>
       <ul class="flex flex-wrap gap-6 text-sm">
-        <li><a href="{% url 'catalog:homepage' %}" class="hover:text-blue-300">خانه</a></li>
+        <li><a href="{% url 'core:homepage' %}" class="hover:text-blue-300">خانه</a></li>
         <li><a href="{% url 'catalog:product_list' %}" class="hover:text-blue-300">محصولات</a></li>
         <li>
-  <a href="{% url 'catalog:cart_view' %}" class="hover:text-yellow-300 flex items-center gap-1">
-    <i class="fa-solid fa-cart-shopping"></i> سبد خرید
-    {% if order and order.items.count > 0 %}
-      <span class="bg-red-500 text-white text-xs px-2 py-[1px] rounded-full">
-        {{ order.items.count }}
-      </span>
-    {% endif %}
-  </a>
-</li>
-        <li><a href="{% url 'catalog:about_page' %}" class="hover:text-blue-300">درباره ما</a></li>
-        <li><a href="{% url 'catalog:contact_page' %}" class="hover:text-blue-300">تماس با ما</a></li>
+          <a href="{% url 'catalog:cart_view' %}" class="hover:text-yellow-300 flex items-center gap-1">
+            <i class="fa-solid fa-cart-shopping"></i> سبد خرید
+            {% if order and order.items.count > 0 %}
+              <span class="bg-red-500 text-white text-xs px-2 py-[1px] rounded-full">
+                {{ order.items.count }}
+              </span>
+            {% endif %}
+          </a>
+        </li>
+        <li><a href="{% url 'core:about_page' %}" class="hover:text-blue-300">درباره ما</a></li>
+        <li><a href="{% url 'core:contact_page' %}" class="hover:text-blue-300">تماس با ما</a></li>
 
         {% if user.is_authenticated %}
-          <li><a href="{% url 'accounts:profile' %}" class="hover:text-green-300">پروفایل</a></li>
-          <li><a href="{% url 'accounts:order_list' %}" class="hover:text-green-300">سفارشات</a></li>
-          <li><a href="{% url 'accounts:logout' %}" class="hover:text-red-400">خروج</a></li>
+          <li><a href="{% url 'core:profile' %}" class="hover:text-green-300">پروفایل</a></li>
+          <li><a href="{% url 'core:order_list' %}" class="hover:text-green-300">سفارشات</a></li>
+          <li><a href="{% url 'core:logout' %}" class="hover:text-red-400">خروج</a></li>
         {% else %}
-          <li><a href="{% url 'accounts:login' %}" class="hover:text-green-400">ورود</a></li>
+          <li><a href="{% url 'core:login' %}" class="hover:text-green-400">ورود</a></li>
+          <li><a href="{% url 'core:signup' %}" class="hover:text-blue-400">ثبت‌نام</a></li>
         {% endif %}
       </ul>
     </div>
   </nav>
 
-  <!-- پیام‌های اطلاع‌رسانی -->
+  <!-- 💬 پیام‌ها -->
   {% if messages %}
-  <div class="container mx-auto px-4 mt-6">
-    {% for message in messages %}
-      <div class="p-4 mb-4 rounded shadow
-        {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-300
-        {% elif message.tags == 'error' %}bg-red-100 text-red-800 border border-red-300
-        {% else %}bg-blue-100 text-blue-800 border border-blue-300
+    <div class="container mx-auto px-4 mt-6 space-y-3">
+      {% for message in messages %}
+        <div class="p-4 rounded shadow
+        {% if message.tags == 'success' %}
+          bg-green-100 text-green-800 border border-green-300
+        {% elif message.tags == 'error' %}
+          bg-red-100 text-red-800 border border-red-300
+        {% else %}
+          bg-blue-100 text-blue-800 border border-blue-300
         {% endif %}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
   {% endif %}
 
-  <!-- محتوای اصلی -->
+  <!-- 📄 محتوای صفحات -->
   <main class="flex-1 container mx-auto px-4 py-8">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- فوتر -->
+  <!-- 🔻 فوتر -->
   <footer class="bg-gray-800 text-gray-300 text-center py-6 mt-12">
     <div class="text-sm space-y-1">
-      <p>آدرس: کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه 9</p>
-  <p>
-  <i class="fa-solid fa-phone text-green-600"></i>
-  <a href="tel:03432733888" class="hover:underline">تماس: 03432733888</a> |
-  <i class="fa-brands fa-whatsapp text-green-500"></i>
-  <a href="https://wa.me/989120890108" target="_blank" class="hover:underline">واتساپ: 09120890108</a>
-</p>
+      <p>آدرس: کرمان، چهارراه مهدیه، خیابان کارگر، نبش کوچه ۹</p>
+      <p>
+        <i class="fa-solid fa-phone text-green-600"></i>
+        <a href="tel:03432733888" class="hover:underline">03432733888</a> |
+        <i class="fa-brands fa-whatsapp text-green-500"></i>
+        <a href="https://wa.me/989120890108" target="_blank" class="hover:underline">واتساپ: 09120890108</a>
+      </p>
       <p>ایمیل: info@torabistore.com</p>
     </div>
     <p class="text-xs text-gray-500 mt-2">© کلیه حقوق محفوظ است.</p>

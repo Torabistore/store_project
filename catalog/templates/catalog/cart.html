@@ -48,18 +48,18 @@
                             {{ item.product.name }}
                         </td>
                         <td class="py-3 px-6 text-center flex justify-center items-center gap-2">
-                            <a href="{% url 'catalog:cart_decrease' forloop.counter0 %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
+                            <a href="{% url 'catalog:cart_decrease' item.product.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
                                 <i class="fa-solid fa-minus"></i>
                             </a>
                             <span class="px-2 font-bold">{{ item.quantity }}</span>
-                            <a href="{% url 'catalog:cart_increase' forloop.counter0 %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
+                            <a href="{% url 'catalog:cart_increase' item.product.id %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-2 py-1 rounded text-xs transition duration-200">
                                 <i class="fa-solid fa-plus"></i>
                             </a>
                         </td>
                         <td class="py-3 px-6 text-center">{{ item.price|price_format }}</td>
-                    <td class="py-3 px-6 text-center">{{ item.total|price_format }}</td>
-             <td class="py-3 px-6 text-center">
-         <a href="{% url 'catalog:cart_remove' forloop.counter0 %}" 
+                        <td class="py-3 px-6 text-center">{{ item.total|price_format }}</td>
+                        <td class="py-3 px-6 text-center">
+                            <a href="{% url 'catalog:cart_remove' item.product.id %}" 
                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 flex items-center gap-1">
                                 <i class="fa-solid fa-trash" title="حذف محصول"></i> حذف
                             </a>

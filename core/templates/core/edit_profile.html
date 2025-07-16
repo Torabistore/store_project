@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}ویرایش اطلاعات | فروشگاه ترابی{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow text-right font-sans">
+  <h2 class="text-xl font-bold mb-6 text-indigo-700">✏️ ویرایش اطلاعات حساب</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 mt-4">
+      ذخیره تغییرات
+    </button>
+  </form>
+
+  <div class="mt-4 text-sm text-gray-500 text-center">
+    <a href="{% url 'core:profile' %}" class="hover:underline text-indigo-500">بازگشت به پروفایل</a>
+  </div>
+</div>
+{% endblock %}
