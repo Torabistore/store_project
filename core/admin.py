@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Product, ProductImage, Order, OrderItem
+from .models import PaymentRequest
 
 # ✅ محصول
 class ProductImageInline(admin.TabularInline):
@@ -33,3 +34,12 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['order', 'product', 'quantity', 'price']
     list_filter = ['order']
     search_fields = ['product__name']
+
+
+
+@admin.register(PaymentRequest)
+class PaymentRequestAdmin(admin.ModelAdmin):
+    list_display = ['user', 'amount', 'status', 'created_at', 'reference_number']
+    list_filter = ['status', 'created_at']
+    search_fields = ['user__username', 'reference_number']
+    readonly_fields = ['payment_receipt']
