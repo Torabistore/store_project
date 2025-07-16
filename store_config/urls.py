@@ -2,24 +2,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from users import views
-from core.views import confirm_payment_view
-from users.views import CustomLoginView
+from django.views.generic import TemplateView
+
 urlpatterns = [
-    # 🔐 مدیریت Django
     path('admin/', admin.site.urls),
 
-    path('', include('core.urls')),       # برای صفحه اصلی
-    path('product/', include('catalog.urls')),  # برای محصولات
+    # 🔗 مسیرهای اپلیکیشن‌های پروژه
+    path('', include('catalog.urls')),         # مسیر اصلی فروشگاه (صفحه‌ اصلی، محصولات، سبد خرید و ...)
+    path('core/', include('core.urls')),       # مسیرهای عمومی مثل تماس با ما، پروفایل، احراز هویت
+    path('users/', include('users.urls')),     # مسیرهای مربوط به مدیریت کاربران، ثبت‌نام، ورود، داشبورد و ...
 
-    path('confirm-payment/<int:id>/', confirm_payment_view, name='confirm_payment'),
-
-    # 🔐 مسیر جایگزین برای accounts
-     path('accounts/login/', CustomLoginView.as_view(), name='login_alias')
-    
+    # 🗺️ فایل robots.txt
+    path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
 
-# ⚙️ استاتیک و مدیا
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+# 📦 تنظیم فایل‌های static و media در حالت توسعه
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
