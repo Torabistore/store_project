@@ -144,3 +144,16 @@ class PaymentRequest(models.Model):
         if debt:
             debt.total_debt = max(debt.total_debt - self.amount, 0)
             debt.save()
+class Order(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='catalog_orders'  # ✅ رفع برخورد با core.Order
+    )
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"سفارش #{self.pk} برای {self.user}"
+

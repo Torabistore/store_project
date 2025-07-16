@@ -1,5 +1,4 @@
 from django.urls import path
-from core.views import homepage_view
 from users.views import ProfileView
 from . import views
 from .views import (

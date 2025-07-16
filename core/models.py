@@ -24,7 +24,12 @@ class ProductImage(models.Model):
 
 # ✅ سفارش
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='کاربر')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name='کاربر',
+        related_name='core_orders'  # ✅ رفع برخورد با catalog.Order
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت سفارش')
     total_price = models.PositiveIntegerField(verbose_name='مبلغ کل سفارش')
 
