@@ -3,19 +3,19 @@
 
 {% block content %}
 <div class="max-w-2xl mx-auto mt-10 bg-white border border-gray-300 rounded-xl p-8 shadow-lg">
-  <h2 class="text-2xl font-extrabold text-gray-800 text-center mb-6">💳 ثبت بدهی جدید در داشبورد مالی</h2>
+  <h2 class="text-2xl font-extrabold text-gray-800 text-center mb-6">💳 ثبت پرداخت جدید</h2>
 
   <form method="post" enctype="multipart/form-data" action="{% url 'catalog:submit_payment' %}" class="grid grid-cols-1 gap-6">
     {% csrf_token %}
 
     <div>
-      <label for="amount" class="block text-sm font-semibold text-gray-700 mb-2">💰 مبلغ بدهی:</label>
+      <label for="amount" class="block text-sm font-semibold text-gray-700 mb-2">💰 مبلغ پرداخت:</label>
       <input type="number" name="amount" id="amount" required min="1000" step="500"
              class="w-full border border-gray-400 rounded-lg px-4 py-2 text-gray-800 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-500 transition" />
     </div>
 
     <div>
-      <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">📝 توضیحات:</label>
+      <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">📝 توضیحات اختیاری:</label>
       <textarea name="description" id="description" rows="3"
                 class="w-full border border-gray-400 rounded-lg px-4 py-2 text-gray-800 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"></textarea>
     </div>
@@ -27,15 +27,15 @@
     </div>
 
     <div>
-      <label for="receipt" class="block text-sm font-semibold text-gray-700 mb-2">📎 فیش پرداختی (فایل):</label>
+      <label for="receipt" class="block text-sm font-semibold text-gray-700 mb-2">📎 فیش پرداختی (تصویر):</label>
       <input type="file" name="receipt" id="receipt"
              class="w-full border border-gray-400 rounded-lg px-4 py-2 text-gray-800 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
              file:mr-4 file:py-2 file:px-4 file:rounded file:border file:border-gray-300 file:bg-gray-100 file:text-gray-800 file:text-sm transition" />
     </div>
 
     <button type="submit"
-            class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-full shadow-md transition">
-      ثبت بدهی
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-full shadow-md transition">
+      ثبت پرداخت
     </button>
   </form>
 
