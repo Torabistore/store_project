@@ -124,23 +124,27 @@ def submit_payment_view(request):
 
         amount = request.POST.get('amount')
         receipt = request.FILES.get('receipt')
+        description = request.POST.get('description')
+        tracking_code = request.POST.get('tracking_code')
 
         try:
             amount_val = float(amount) if amount else None
-            if amount_val and amount_val >= 1000:
+            if amount_val and amount_val >= 1000 and receipt:
                 PaymentRequest.objects.create(
                     user=request.user,
                     amount=amount_val,
                     payment_receipt=receipt,
+                    description=description,
+                    reference_number=tracking_code,
                     status='pending'
                 )
                 print("✅ پرداخت ثبت شد")
                 messages.success(request, "پرداخت شما با موفقیت ثبت شد ✅")
             else:
-                messages.error(request, "مبلغ خیلی کم یا نامعتبر است ❌")
+                messages.error(request, "مبلغ نامعتبر یا فایل فیش انتخاب نشده ❌")
         except Exception as e:
             print("❌ خطا در ثبت پرداخت:", str(e))
-            messages.error(request, "خطا هنگام ذخیره پرداخت ❌")
+            messages.error(request, "ثبت پرداخت با خطا مواجه شد ❌")
 
         return redirect('catalog:submit_payment')
 
