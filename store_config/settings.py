@@ -117,3 +117,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@example.com'
 
 SMS_API_KEY = 'rKBuFWS7Bde2D9Ig0v6YNzdHbiAHfzLJVN19axZKG2WhoTVO'
+from decouple import config
+SECRET_KEY = config('SECRET_KEY')
